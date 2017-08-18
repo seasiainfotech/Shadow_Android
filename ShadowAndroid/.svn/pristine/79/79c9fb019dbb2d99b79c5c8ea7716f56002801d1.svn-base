@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="com.android.shadow.views.search.SearchResultActivity">
+
+    <RelativeLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="3dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:id="@+id/image_view_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/back_icon"
+            android:backgroundTint="@android:color/white" />
+
+        <SearchView
+            android:id="@+id/search_view_search_activity"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="45dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/image_view_back"
+            android:background="@drawable/round_dark_purple"
+            android:gravity="center_vertical"
+            android:searchIcon="@drawable/search_white" />
+
+        <ImageView
+            android:id="@+id/Image_view_three_dot"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/three_dot"
+            android:backgroundTint="@android:color/white"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/Image_view_menu"
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/menu_purple"
+            android:backgroundTint="@android:color/white"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/text_view_select_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/search_view_search_activity"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:drawableRight="@drawable/ic_arrow_drop_down"
+            android:drawableTintMode="@android:color/white"
+            android:gravity="center"
+            android:text="select distance"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:visibility="visible"/>
+
+    </RelativeLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_layout"
+        android:layout_marginTop="10dp"
+        android:visibility="visible" />
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_layout"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

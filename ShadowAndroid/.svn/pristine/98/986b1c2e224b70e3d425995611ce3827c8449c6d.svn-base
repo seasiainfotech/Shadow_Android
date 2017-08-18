@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.android.shadow.views.search.SearchResultActivity">
+
+    <ImageView
+        android:id="@+id/image_view_back"
+        android:background="@drawable/back_icon"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+
+    <SearchView
+        android:id="@+id/search_view_search_activity"
+        android:layout_toRightOf="@+id/image_view_back"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/round_gray_border"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
+
+
+    <ImageView
+        android:id="@+id/Image_view_three_dot"
+        android:layout_below="@+id/search_view_search_activity"
+        android:background="@drawable/three_dot"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="30dp"
+        android:backgroundTint="@color/three_dot_gray"
+        android:layout_height="30dp" />
+
+    <ImageView
+        android:id="@+id/Image_view_menu"
+        android:layout_below="@+id/search_view_search_activity"
+        android:background="@drawable/menu_purple"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toLeftOf="@+id/Image_view_three_dot"
+        android:layout_width="30dp"
+        android:layout_height="20dp" />
+
+    <TextView
+        android:id="@+id/text_view_select_distance"
+        android:layout_below="@+id/search_view_search_activity"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:gravity="center"
+        android:drawableRight="@drawable/ic_arrow_drop_down"
+        android:layout_marginLeft="10dp"
+        android:text="select distance"
+        android:layout_height="wrap_content"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_search_results"
+        android:layout_below="@+id/Image_view_menu"
+        android:visibility="visible"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:visibility="gone"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/Image_view_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+</RelativeLayout>

@@ -1,0 +1,95 @@
+package com.android.shadow.presenter;
+
+import android.text.TextUtils;
+
+import com.android.shadow.R;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.model.input.AddRatingCommentInput;
+import com.android.shadow.model.output.AddRatingCommentResponse;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.utils.SharedPrefsHelper;
+import com.android.shadow.utils.Utilities;
+import com.android.shadow.views.core.BaseActivity;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+
+/**
+ * Created by singhgharjyot on 6/19/2017.
+ */
+
+public class AddRatingCommentPresenter {
+    private final AddRatingCommentPresenter.AddRatingCommentCallback mAddRatingCommentCallback;
+    private final BaseActivity mBaseActivity;
+
+    public interface AddRatingCommentCallback {
+        void onAddRatingCommentSuccess(retrofit2.Response<AddRatingCommentResponse> addRatingCommentResponse);
+    }
+
+    public AddRatingCommentPresenter(BaseActivity baseActivity,  AddRatingCommentCallback addRatingCommentCallback) {
+        this.mAddRatingCommentCallback = addRatingCommentCallback;
+        this.mBaseActivity = baseActivity;
+    }
+
+    public void checkValidations(String... params) {
+        String message = params[0];
+        String rating = params[1];
+        String userRole=params[2];
+        String userId_=params[3];
+        String otherUserId=params[4];
+        String userId;
+        SharedPrefsHelper sharedPrefsHelper = new SharedPrefsHelper(mBaseActivity);
+        userId = sharedPrefsHelper.get(PreferenceKeys.PREF_USER_ID);
+
+        if (!TextUtils.isEmpty(message.trim())) {
+            if (!Utilities.checkInternet(mBaseActivity)) {
+                mBaseActivity.showToast(R.string.no_internet_msg);
+            } else {
+                AddRatingCommentInput addRatingCommentInput = new AddRatingCommentInput();
+                addRatingCommentInput.setComment(message);
+                addRatingCommentInput.setRating(rating);
+                addRatingCommentInput.setUserId(userId);
+
+                if (userRole.contains("user")){
+                    addRatingCommentInput.setRatedUserId(otherUserId);
+                }else if (userRole.contains("company")){
+                    addRatingCommentInput.setCompanyId(otherUserId);
+                }else if (userRole.contains("school")){
+                    addRatingCommentInput.setSchoolId(otherUserId);
+                }
+                responseCheck(addRatingCommentInput);
+            }
+        } else {
+            mBaseActivity.showToast(R.string.user_name_error);
+        }
+    }
+
+    private void responseCheck(AddRatingCommentInput addRatingCommentInput) {
+        mBaseActivity.showDialog();
+        final Call<AddRatingCommentResponse> response = GetRestAdapter.getRestAdapter(false).addRatingComment(addRatingCommentInput);
+        response.enqueue(new Callback<AddRatingCommentResponse>() {
+            @Override
+            public void onResponse(Call<AddRatingCommentResponse> call, retrofit2.Response<AddRatingCommentResponse> addRatingCommentResponse) {
+                mBaseActivity.hideDialog();
+                if (addRatingCommentResponse != null && addRatingCommentResponse.body() != null) {
+                    if (addRatingCommentResponse.body().getStatus().equals("200")) {
+                        if (addRatingCommentResponse.body().getData() != null) {
+                            mBaseActivity.showToast(addRatingCommentResponse.body().getMessage());
+                            mBaseActivity.finish();
+                        }
+                    } else {
+                        mBaseActivity.showToast(R.string.server_error_msg);
+                    }
+                } else {
+                    mBaseActivity.showToast(R.string.server_error_msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AddRatingCommentResponse> call, Throwable t) {
+                mBaseActivity.hideDialog();
+                mBaseActivity.showToast(t.getLocalizedMessage());
+            }
+        });
+    }
+}

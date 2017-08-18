@@ -1,0 +1,158 @@
+package com.android.shadow.api;
+
+
+import com.android.shadow.model.input.AddRatingCommentInput;
+import com.android.shadow.model.input.EditProfileInput;
+import com.android.shadow.model.input.EmailForgotPasswordInput;
+import com.android.shadow.model.input.GetAllSchoolInput;
+import com.android.shadow.model.input.GetOccupationInput;
+import com.android.shadow.model.input.GetProfileInput;
+import com.android.shadow.model.input.LoginInput;
+import com.android.shadow.model.input.PasswordInput;
+import com.android.shadow.model.input.PhoneOtpInput;
+import com.android.shadow.model.input.SearchAllTypeListInput;
+import com.android.shadow.model.input.SearchCompanyListInput;
+import com.android.shadow.model.input.SearchLocationListInput;
+import com.android.shadow.model.input.SearchOccupationListInput;
+import com.android.shadow.model.input.SearchSchoolListInput;
+import com.android.shadow.model.input.SearchSimpleFilterInput;
+import com.android.shadow.model.input.SearchTrendsListInput;
+import com.android.shadow.model.input.SearchUserListInput;
+import com.android.shadow.model.input.SetNewPasswordInput;
+import com.android.shadow.model.input.SignupInput;
+import com.android.shadow.model.input.UsernameInput;
+import com.android.shadow.model.input.VerifyEmailOtpInput;
+import com.android.shadow.model.input.VerifyPhoneOtpInput;
+import com.android.shadow.model.output.AddRatingCommentResponse;
+import com.android.shadow.model.output.CountryCodeOutput;
+import com.android.shadow.model.output.EditProfileResponse;
+import com.android.shadow.model.output.EmailOtpResponse;
+import com.android.shadow.model.output.GetAllInterestsResponse;
+import com.android.shadow.model.output.GetAllOccupationResponse;
+import com.android.shadow.model.output.GetAllRatingResponse;
+import com.android.shadow.model.output.GetAllSchoolResponse;
+import com.android.shadow.model.output.GetAllSkillResponse;
+import com.android.shadow.model.output.GetProfileResponse;
+import com.android.shadow.model.output.LoginResponse;
+import com.android.shadow.model.output.LogoutResponse;
+import com.android.shadow.model.output.PasswordResponse;
+import com.android.shadow.model.output.PhoneOtpResponse;
+import com.android.shadow.model.output.SearchAllTypeListResponse;
+import com.android.shadow.model.output.SearchCompanyListResponse;
+import com.android.shadow.model.output.SearchLocationListResponse;
+import com.android.shadow.model.output.SearchOccupationListResponse;
+import com.android.shadow.model.output.SearchSchoolListResponse;
+import com.android.shadow.model.output.SearchSimpleResponse;
+import com.android.shadow.model.output.SearchTrendsListResponse;
+import com.android.shadow.model.output.SearchUserListResponse;
+import com.android.shadow.model.output.SetNewPasswordResponse;
+import com.android.shadow.model.output.SignupResponse;
+import com.android.shadow.model.output.UploadVideoResponse;
+import com.android.shadow.model.output.UsernameResponse;
+import com.android.shadow.model.output.VerifyEmailOtpResponse;
+import com.android.shadow.model.output.VerifyPhoneOtpResponse;
+
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
+
+/**
+ * Created by KaurGurleen on 11/28/2016.
+ */
+
+public interface GitHubService {
+
+    @POST("login")
+    Call<LoginResponse> loghinUser(@Body LoginInput loginInput);
+
+    @POST("checkAvailabilityOfUserName")
+    Call<UsernameResponse> checkUsername(@Body UsernameInput loginInput);
+
+    @POST("login")
+    Call<PasswordResponse> checkPassword(@Body PasswordInput loginInput);
+
+    @POST("signUp")
+    Call<SignupResponse> signupUser(@Body SignupInput input);
+
+    @POST("verifyEmailOtp")
+    Call<VerifyEmailOtpResponse> verifyEmail(@Body VerifyEmailOtpInput input);
+
+    @GET("country/codes")
+    Call<CountryCodeOutput> getCountryCode();
+
+    @POST("getAllSchool")
+    Call<GetAllSchoolResponse> getAllSchool(@Body GetAllSchoolInput getAllSchoolInput);
+
+    @POST("getAvailableSchoolList")
+    Call<GetAllSchoolResponse> getAllAvailSchool(@Body GetAllSchoolInput getAllSchoolInput);
+
+    @POST("getAllOccupation")
+    Call<GetAllOccupationResponse> getAllOccupation(@Body GetOccupationInput getOccupationInput);
+
+    @POST("getAllSkillType")
+    Call<GetAllSkillResponse> getAllSkills(@Body GetOccupationInput getOccupationInput);
+
+    @POST("getAllInterestType")
+    Call<GetAllInterestsResponse> getAllInterests(@Body GetOccupationInput getOccupationInput);
+
+    @POST("getProfile")
+    Call<GetProfileResponse> getProfile(@Body GetProfileInput getProfileInput);
+
+    @POST("resendEmailOtp")
+    Call<EmailOtpResponse> emailForgotPassword(@Body EmailForgotPasswordInput emailForgotPasswordInput);
+
+    @POST("resendPhoneOtp")
+    Call<PhoneOtpResponse> phoneForgotPassword(@Body PhoneOtpInput phoneForgotPasswordInput);
+
+    @POST("forgotPassword")
+    Call<SetNewPasswordResponse> setNewPassword(@Body SetNewPasswordInput setNewPasswordInput);
+
+    @POST("verifyPhoneOtp")
+    Call<VerifyPhoneOtpResponse> verifyPhoneOtp(@Body VerifyPhoneOtpInput verifyPhoneOtpInput);
+
+    @POST("addUpdateAllTypeOfRatingOrComment")
+    Call<AddRatingCommentResponse> addRatingComment(@Body AddRatingCommentInput addRatingCommentInput);
+
+    @POST("getTopRatingCompanyList")
+    Call<SearchCompanyListResponse> getCompanyList(@Body SearchCompanyListInput searchCompanyListInput);
+
+    @POST("getTopRatingUserList")
+    Call<SearchUserListResponse> getUserList(@Body SearchUserListInput searchUserListInput);
+
+    @POST("getAllTypeTopRatingListUsingLocation")
+    Call<SearchLocationListResponse> getLocationList(@Body SearchLocationListInput searchLocationListInput);
+
+    @POST("getTopRatingOccupationList")
+    Call<SearchOccupationListResponse> getOccupationList(@Body SearchOccupationListInput searchOccupationListInput);
+
+    @POST("getTopRatingSchoolList")
+    Call<SearchSchoolListResponse> getSchoolList(@Body SearchSchoolListInput searchSchoolListInput);
+
+    @POST("getTopRatingTrendList")
+    Call<SearchTrendsListResponse> getTrendsList(@Body SearchTrendsListInput searchTrendsListInput);
+
+    @POST("editProfile")
+    Call<EditProfileResponse> editProfile(@Body EditProfileInput editProfileInput);
+
+    @POST("getAllTypeTopRatingListbyType")
+    Call<SearchAllTypeListResponse> getAllTypeList(@Body SearchAllTypeListInput searchAllTypeListResponse);
+
+    @POST("searchFilter")
+    Call<SearchSimpleResponse> getSearchSimpleList(@Body SearchSimpleFilterInput searchSimpleFilterInput);
+
+    @Multipart
+    @POST("uploadVideo")
+    Call<UploadVideoResponse> uploadVideo(@Part("userId") RequestBody userId, @Part MultipartBody.Part videoFile);
+
+    @POST("getRatingListbyId")
+    Call<GetAllRatingResponse> getRatingListById(@Body GetProfileInput getProfileInput);
+
+    @POST("logout")
+    Call<LogoutResponse> logout(@Body GetProfileInput getProfileInput);
+
+}

@@ -1,0 +1,191 @@
+package com.android.shadow.presenter;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import com.android.shadow.R;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.imagechooser.api.ChooserType;
+import com.android.shadow.imagechooser.api.ChosenImage;
+import com.android.shadow.imagechooser.api.ChosenImages;
+import com.android.shadow.imagechooser.api.ChosenVideo;
+import com.android.shadow.imagechooser.api.ChosenVideos;
+import com.android.shadow.imagechooser.api.ImageChooserListener;
+import com.android.shadow.imagechooser.api.ImageChooserManager;
+import com.android.shadow.model.input.GetOccupationInput;
+import com.android.shadow.model.output.GetAllInterestsResponse;
+import com.android.shadow.model.output.GetAllOccupationResponse;
+import com.android.shadow.model.output.GetAllSchoolResponse;
+import com.android.shadow.model.output.GetAllSkillResponse;
+import com.android.shadow.utils.Base64;
+import com.android.shadow.views.profile.editprofile.EditProfileBaseActivity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
+
+
+public class EditProfilePresenter implements ImageChooserListener {
+
+    public ImageChooserManager imageChooserManager;
+    private EditProfileBaseActivity mEditProfileActivity;
+    private OccupationCallback mOccupationCallback;
+    private int chooserType;
+    private String filePath;
+
+    public interface OccupationCallback {
+        void onInterestsListSuccess(retrofit2.Response<GetAllInterestsResponse> response);
+
+        void onOccupationListSuccess(retrofit2.Response<GetAllOccupationResponse> response);
+    }
+
+
+    public EditProfilePresenter(EditProfileBaseActivity editProfileActivity, OccupationCallback schoolListCallback) {
+        this.mEditProfileActivity = editProfileActivity;
+        this.mOccupationCallback = schoolListCallback;
+    }
+
+
+    public void chooseImage() {
+        chooserType = ChooserType.REQUEST_PICK_PICTURE;
+        imageChooserManager = new ImageChooserManager(mEditProfileActivity,
+                ChooserType.REQUEST_PICK_PICTURE, "myfolder", true) {
+            @Override
+            public void onProcessedVideo(ChosenVideo video) {
+
+            }
+
+            @Override
+            public void onProcessedVideos(ChosenVideos videos) {
+
+            }
+        };
+        imageChooserManager.setImageChooserListener((ImageChooserListener) this);
+        try {
+            //pbar.setVisibility(View.VISIBLE);
+            filePath = imageChooserManager.choose();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void onImageChosen(final ChosenImage images) {
+        mEditProfileActivity.runOnUiThread(new Runnable() {
+
+            public void run() {
+                if (images != null) {
+                    String imagePath = images.getFileThumbnail();
+                    Bitmap thumbnailBitmap = BitmapFactory.decodeFile(imagePath);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    thumbnailBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    // byte data[] = new byte[1024];
+                    try {
+                        String outputData = Base64.encodeBytes(byteArray, Base64.ENCODE);
+                        mEditProfileActivity.userImage=outputData;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mEditProfileActivity.mAddImageView.setImageBitmap(thumbnailBitmap);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onError(final String reason) {
+        mEditProfileActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mEditProfileActivity.showToast(reason);
+            }
+        });
+    }
+
+    @Override
+    public void onImagesChosen(final ChosenImages images) {
+        mEditProfileActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (images != null) {
+                    String imagePath = images.getFileThumbnail();
+                    Bitmap thumbnailBitmap = BitmapFactory.decodeFile(imagePath);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    thumbnailBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                   // byte data[] = new byte[1024];
+                    try {
+                        String outputData = Base64.encodeBytes(byteArray, Base64.ENCODE);
+                        mEditProfileActivity.userImage=outputData;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mEditProfileActivity.mAddImageView.setImageBitmap(thumbnailBitmap);
+                }
+            }
+        });
+    }
+
+    // Should be called if for some reason the ImageChooserManager is null (Due
+    // to destroying of activity for low memory situations)
+    public void reinitializeImageChooser() {
+        imageChooserManager = new ImageChooserManager(mEditProfileActivity, chooserType,
+                "myfolder", true) {
+            @Override
+            public void onProcessedVideo(ChosenVideo video) {
+            }
+
+            @Override
+            public void onProcessedVideos(ChosenVideos videos) {
+
+            }
+        };
+        imageChooserManager.setImageChooserListener(this);
+        imageChooserManager.reinitialize(filePath);
+    }
+
+
+    public void checkValidations(String... params) {
+        String name = params[0];
+        String pass = params[1];
+
+    }
+
+    public void getAllInterests() {
+        mEditProfileActivity.showDialog();
+        GetOccupationInput getOccupationInput=new GetOccupationInput();
+
+        getOccupationInput.setPageIndex("0");
+        getOccupationInput.setPageSize("2");
+        final Call<GetAllInterestsResponse> responseInterestsList = GetRestAdapter.getRestAdapter(false).getAllInterests(getOccupationInput);
+        responseInterestsList.enqueue(new Callback<GetAllInterestsResponse>() {
+            @Override
+            public void onResponse(Call<GetAllInterestsResponse> call, Response<GetAllInterestsResponse> responseInterestsList) {
+                mEditProfileActivity.hideDialog();
+                if (responseInterestsList != null && responseInterestsList.body() != null) {
+                    Log.e("interests list ---", responseInterestsList.body().getData() + "");
+                    mOccupationCallback.onInterestsListSuccess(responseInterestsList);
+
+                } else {
+                    mEditProfileActivity.showToast(mEditProfileActivity.getString(R.string.server_error_msg));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetAllInterestsResponse> call, Throwable t) {
+                mEditProfileActivity.hideDialog();
+                mEditProfileActivity.showToast(t.getMessage());
+            }
+        });
+    }
+}

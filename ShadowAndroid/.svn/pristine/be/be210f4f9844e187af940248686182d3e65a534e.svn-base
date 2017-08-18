@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/s1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rl_border_grey"
+        tools:context="com.android.shadow.views.request.sendRequest.SendRequestActivity">
+
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_color">
+
+            <View
+                android:id="@+id/view_1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/half_image_height_profile"
+                android:layout_below="@+id/rl_header_common"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/rl_border_grey">
+
+            </View>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_user_profile"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_below="@+id/rl_header_common"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/profile_gray" />
+
+            <ImageView
+                android:id="@+id/iv_video"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@+id/rl_header_common"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="@dimen/iv_video_margin_top"
+                android:layout_toRightOf="@+id/iv_user_profile"
+                android:background="@drawable/video_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_video"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/iv_user_profile"
+                android:text="click to view"
+                android:textColor="@color/school_company_color"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/iv_rating_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@+id/rl_header_common"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="65dp"
+                android:layout_toLeftOf="@+id/iv_user_profile"
+                android:background="@drawable/star_unselected" />
+
+            <TextView
+                android:id="@+id/text_view_average_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rl_header_common"
+                android:layout_marginTop="@dimen/avg_rating_text_margin_top"
+                android:layout_toLeftOf="@+id/iv_rating_icon"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_no_of_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_average_rating"
+                android:layout_toLeftOf="@+id/tv_No_of_rating_text"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_No_of_rating_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_average_rating"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_toLeftOf="@+id/iv_user_profile"
+                android:text="ratings"
+                android:textColor="@color/school_company_color"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_header">
+
+            <TextView
+                android:id="@+id/text_view_location_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Location:"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/text_view_location"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/text_view_location_text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/round_purple_border"
+                android:gravity="center"
+                android:text="sfgfsxgv dgf fgfsv dfgvfs"
+                android:textColor="@color/link_color"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_communication"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_location"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/text_view_medium_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Medium:"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/text_view_medium"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/text_view_medium_text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/round_purple_border"
+                android:gravity="center"
+                android:text="sfgfsxgv dgf fgfsv dfgvfs"
+                android:textColor="@color/link_color"
+                android:textSize="15sp" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text_view_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_communication"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Date:"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <CalendarView
+            android:id="@+id/calendar_view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@+id/text_view_date_text"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/round_purple_border"
+            android:weekDayTextAppearance="@android:style/TextAppearance.Large" />
+
+        <TextView
+            android:id="@+id/text_view_message_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/calendar_view"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Message:"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/text_view_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view_message_text"
+            android:layout_margin="10dp"
+            android:minHeight="100dp"
+            android:textColor="@color/school_company_color"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_below="@+id/text_view_message"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_filled_purple"
+            android:gravity="center"
+            android:text="ACCEPT"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/text_view_message"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_purple_border"
+            android:gravity="center"
+            android:text="DECLINE"
+            android:textColor="@color/link_color"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+</ScrollView>

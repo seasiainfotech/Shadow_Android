@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_color"
+        android:focusableInTouchMode="true">
+
+        <RelativeLayout
+            android:id="@+id/rl_header_edit_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/banner_color"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/image_view_back"
+                android:layout_width="@dimen/back_icon_width"
+                android:layout_height="@dimen/back_icon_height"
+
+                android:background="@drawable/back_icon"
+                android:backgroundTint="@android:color/white" />
+
+            <TextView
+                android:id="@+id/text_view_comp_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="5dp"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/image_view_save"
+                android:layout_width="@dimen/edit_upload"
+                android:layout_height="@dimen/edit_upload"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/upload_icon"
+                android:backgroundTint="@android:color/white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/half_image_height"
+            android:layout_below="@+id/rl_header_edit_profile"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/rl_border_grey">
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_add_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/rl_header_edit_profile"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/circle"
+
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_add_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+
+                />
+
+            <ImageView
+                android:id="@+id/iv_ic_plus"
+                android:layout_width="@dimen/add_photo_plus"
+                android:layout_height="@dimen/add_photo_plus"
+                android:layout_centerInParent="true"
+                android:background="@drawable/ic_add" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_add_social_media"
+            android:layout_width="@dimen/add_social"
+            android:layout_height="@dimen/add_social"
+            android:layout_below="@+id/rl_header_edit_profile"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="70dp"
+            android:layout_toLeftOf="@+id/rl_add_image"
+            android:background="@drawable/add_new" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_add_social_media"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/rl_add_image"
+            android:text="Social Media"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/iv_video_upload"
+            android:layout_width="@dimen/edit_video_icon_width"
+            android:layout_height="@dimen/edit_video_icon_height"
+            android:layout_below="@+id/rl_header_edit_profile"
+            android:layout_marginLeft="44dp"
+            android:layout_marginTop="75dp"
+            android:layout_toRightOf="@+id/rl_add_image"
+            android:background="@drawable/video_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_video_upload"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/rl_add_image"
+            android:text="Hold to record"
+            android:textSize="12sp" />
+
+        <RelativeLayout
+            android:id="@+id/rl_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/rl_1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rl_border_grey"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/tv_company_url_name"
+                android:layout_width="115dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:text="Company Name:"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_text_company_name"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@+id/tv_company_url_name"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:text="@string/testing"
+                android:singleLine="true"
+                android:textColor="@color/school_company_color"
+                android:textSize="12sp"
+
+                />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_below="@+id/edit_text_company_name"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@+id/tv_company_url_name"
+                android:background="@color/light_grey"
+
+                ></View>
+
+            <TextView
+                android:id="@+id/tv_company_url_location"
+                android:layout_width="115dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_company_url_name"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="30dp"
+                android:text="Location:"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_view_company_location"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/testing"
+                android:textColor="@color/school_company_color"
+                android:textSize="12sp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="17dp"
+                android:layout_toRightOf="@+id/tv_company_url_location"
+                android:layout_below="@+id/edit_text_company_name"
+                />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_below="@+id/text_view_company_location"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@+id/tv_company_url_name"
+                android:background="@color/light_grey"
+                android:id="@+id/view4"></View>
+
+            <TextView
+                android:id="@+id/tv_company_url"
+                android:layout_width="115dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_company_url_location"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="35dp"
+                android:text="Company Url:"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_text_company_url"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/text_view_company_location"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="22dp"
+                android:layout_toRightOf="@+id/tv_company_url"
+                android:background="@null"
+                android:singleLine="true"
+
+                android:text="@string/testing"
+                android:textColor="@color/school_company_color"
+                android:textSize="12sp" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_below="@+id/edit_text_company_url"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@+id/tv_company_url_name"
+                android:background="@color/light_grey"></View>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_profile_links"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_2">
+
+            <include layout="@layout/layout_url_edit_profile"></include>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_profile_links"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rl_border_grey"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/tv_bio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="About me"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_text_add_company_bio"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_below="@+id/tv_bio"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@null"
+                android:gravity="left|top"
+                android:hint="@string/bio_hint"
+                android:maxLength="255"
+                android:textColor="@color/username_color"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ll_occupations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_3"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rl_border_grey">
+
+            <TextView
+                android:id="@+id/tv_occupa"
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Occupations:"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/iv_plus_occupations"
+                android:layout_width="@dimen/occupations_plus"
+                android:layout_height="@dimen/occupations_plus"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/edit_purple"/>
+
+            <com.android.shadow.views.ExpandableHeightGridView
+                android:id="@+id/grid_view_occupations"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_below="@+id/tv_occupa"
+                android:layout_marginBottom="10dp"
+                android:numColumns="3" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

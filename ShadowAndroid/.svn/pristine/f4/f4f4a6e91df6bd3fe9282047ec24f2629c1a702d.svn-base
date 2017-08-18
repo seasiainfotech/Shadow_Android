@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_profile_links"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/edit_text_school_url">
+
+    <ImageView
+        android:id="@+id/tv_url1"
+        android:layout_width="@dimen/url_profile"
+        android:layout_height="@dimen/url_profile"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/fb"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/edit_text_url1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="35dp"
+        android:layout_toRightOf="@+id/tv_url1"
+        android:background="@null"
+        android:singleLine="true"
+        android:text="sas dsds s s s s s s s s s    kjkk  mlmlml sds  s s s s s s s       "
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/vie_url1"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@+id/edit_text_url1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_toRightOf="@+id/tv_url1"
+        android:background="@color/light_grey"
+        android:visibility="gone"></View>
+
+
+    <ImageView
+        android:id="@+id/tv_url2"
+        android:layout_width="@dimen/url_profile"
+        android:layout_height="@dimen/url_profile"
+        android:layout_below="@+id/tv_url1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/fb"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/edit_text_url2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_url1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="35dp"
+        android:layout_toRightOf="@+id/tv_url1"
+        android:background="@null"
+        android:singleLine="true"
+        android:text="skaska k aa ka k ka k"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/vie_url2"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@+id/edit_text_url2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_toRightOf="@+id/tv_url1"
+        android:background="@color/light_grey"
+
+        android:visibility="gone"></View>
+
+    <ImageView
+        android:id="@+id/tv_url3"
+        android:layout_width="@dimen/url_profile"
+        android:layout_height="@dimen/url_profile"
+        android:layout_below="@+id/tv_url2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/fb"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/edit_text_url3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_url2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="35dp"
+        android:layout_toRightOf="@+id/tv_url1"
+        android:background="@null"
+        android:singleLine="true"
+        android:text="dsdjsdjsdjsdjd ssd"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/vie_url3"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@+id/edit_text_url3"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_toRightOf="@+id/tv_url1"
+        android:background="@color/light_grey"
+        android:visibility="gone"></View>
+
+
+</RelativeLayout>

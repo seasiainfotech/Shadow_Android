@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+   android:id="@+id/rl_search"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/Circular_image_view_Profile_pic"
+        android:src="@drawable/profile_gray"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:id="@+id/text_view_name"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/ll_rating"
+        android:layout_toRightOf="@+id/Circular_image_view_Profile_pic"
+        android:textColor="@color/colorPrimary" />
+
+    <LinearLayout
+        android:id="@+id/ll_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_star1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/iv_message"
+            android:src="@drawable/star_icon" />
+
+        <ImageView
+            android:id="@+id/iv_star2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/iv_message"
+            android:src="@drawable/star_icon" />
+
+        <ImageView
+            android:id="@+id/iv_star3"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/iv_message"
+            android:src="@drawable/star_icon" />
+
+        <ImageView
+            android:id="@+id/iv_star4"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/iv_message"
+            android:src="@drawable/star_icon" />
+
+        <ImageView
+            android:id="@+id/iv_star5"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/iv_message"
+            android:src="@drawable/star_icon" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_view_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/ll_rating"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:text="00m" />
+
+</RelativeLayout>

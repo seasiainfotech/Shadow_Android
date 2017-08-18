@@ -1,0 +1,81 @@
+package com.android.shadow.api;
+
+import com.android.shadow.ShadowApp;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.utils.SharedPrefsHelper;
+import com.android.shadow.views.core.BaseActivity;
+
+import java.io.IOException;
+import java.util.IllegalFormatCodePointException;
+
+import okhttp3.Credentials;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+/**
+ * Created by KaurGurleen on 11/28/2016.
+ */
+
+public class GetRestAdapter {
+
+    static SharedPrefsHelper sharedPrefsHelper;
+    // private static final String QA = "http://dotnetstg2.seasiaconsulting.com/RconnectQA/";
+    private static final String UAT = "http://115.248.100.76:8013/user/api/";
+
+    public static final String HOST_URL = UAT;
+    public static GitHubService retrofitInterface;
+    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+    public static GitHubService getRestAdapter(final boolean isAuthRequired) {
+
+
+        if (retrofitInterface == null || isAuthRequired) {
+            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+            httpClient.addInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Request original = chain.request();
+
+                    // Request customization: add request headers
+
+                    Request.Builder requestBuilder;
+                    if (isAuthRequired){
+                      requestBuilder = original.newBuilder()
+                                .addHeader("Device-Token", "deviceID")  //TODO
+                                .addHeader("Device-Type", "1")
+                                .addHeader("Application-Typ" +
+                                        "e", "ANDROID")
+                                .addHeader("Application-Token", "ANDROID_pgjtYtfm3cBqMpTCAstNT43xmBGBsmZH9dsfHU1sdF")
+                                .addHeader("Content-Type", "application/json")
+                                .addHeader("Vendor-Token", "asa")
+                                .addHeader("Session-Token", ShadowApp.sessionToken);
+                    }else {
+                        requestBuilder = original.newBuilder()
+                                .addHeader("Device-Token", "deviceID")  //TODO
+                                .addHeader("Device-Type", "1")
+                                .addHeader("Application-Type", "ANDROID")
+                                .addHeader("Application-Token", "ANDROID_pgjtYtfm3cBqMpTCAstNT43xmBGBsmZH9dsfHU1sdF")
+                                .addHeader("Content-Type", "application/json")
+                                .addHeader("Vendor-Token", "asa");
+                    }
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                }
+            });
+
+            OkHttpClient client = httpClient.build();
+
+            retrofitInterface = new Retrofit.Builder()
+                    .baseUrl(HOST_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build()
+                    .create(GitHubService.class);
+        }
+        return retrofitInterface;
+    }
+}

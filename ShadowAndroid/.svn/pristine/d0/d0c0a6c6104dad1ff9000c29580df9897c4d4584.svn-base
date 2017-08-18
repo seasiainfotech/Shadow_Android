@@ -1,0 +1,126 @@
+package com.android.shadow.presenter;
+
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.android.shadow.R;
+import com.android.shadow.api.AddressApi;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.model.input.GetAllSchoolInput;
+import com.android.shadow.model.output.GetAllSchoolResponse;
+import com.android.shadow.utils.Utilities;
+import com.android.shadow.views.core.BaseActivity;
+
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * This class is used to check  validations and check the location validation
+ * using {@link AddressApi} and then call the school api
+ *
+ * @author jindaldipanshu
+ * @version 1.0
+ */
+
+
+public class SchoolPresenter {
+    private BaseActivity mBaseActivity;
+    private SchoolCallback mSchoolCallback;
+
+    public SchoolPresenter(BaseActivity baseActivity, SchoolCallback schoolCallback) {
+        mBaseActivity = baseActivity;
+        mSchoolCallback = schoolCallback;
+    }
+
+    public interface SchoolCallback {
+        void onSuccess(String lat);
+
+        void onSchoolListSuccess(GetAllSchoolResponse response);
+    }
+
+
+    /**
+     * This method is used to getAllSchool
+     */
+    public void getAllSchool(GetAllSchoolInput getAllSchoolInput) {
+        //  mBaseActivity.showDialog();
+        //GetAllSchoolInput getAllSchoolInput=new GetAllSchoolInput();
+        // getAllSchoolInput.setSearchKeyword("");
+        final Call<GetAllSchoolResponse> responseSchoolList = GetRestAdapter.getRestAdapter(false).getAllSchool(getAllSchoolInput);
+        responseSchoolList.enqueue(new Callback<GetAllSchoolResponse>() {
+            @Override
+            public void onResponse(Call<GetAllSchoolResponse> call, Response<GetAllSchoolResponse> responseSchoolList) {
+                // mBaseActivity.hideDialog();
+                if (responseSchoolList != null && responseSchoolList.body() != null) {
+                    if (responseSchoolList.body().getStatus().equals("200")) {
+                        mSchoolCallback.onSchoolListSuccess(responseSchoolList.body());
+                    } else {
+                        mBaseActivity.showToast(responseSchoolList.body().getMessage());
+                    }
+                } else {
+                    mBaseActivity.showToast(mBaseActivity.getString(R.string.no_data_found_msg));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetAllSchoolResponse> call, Throwable t) {
+                //   mBaseActivity.hideDialog();
+                mBaseActivity.showToast(t.getMessage());
+            }
+        });
+    }
+
+
+    /**
+     * This method is used to getAllSchool
+     */
+    public void getAllAvailSchool(GetAllSchoolInput getAllSchoolInput) {
+        //  mBaseActivity.showDialog();
+        //GetAllSchoolInput getAllSchoolInput=new GetAllSchoolInput();
+        // getAllSchoolInput.setSearchKeyword("");
+        final Call<GetAllSchoolResponse> responseSchoolList = GetRestAdapter.getRestAdapter(false).getAllAvailSchool(getAllSchoolInput);
+        responseSchoolList.enqueue(new Callback<GetAllSchoolResponse>() {
+            @Override
+            public void onResponse(Call<GetAllSchoolResponse> call, Response<GetAllSchoolResponse> responseSchoolList) {
+                // mBaseActivity.hideDialog();
+                if (responseSchoolList != null && responseSchoolList.body() != null) {
+                    if (responseSchoolList.body().getStatus().equals("200")) {
+                        mSchoolCallback.onSchoolListSuccess(responseSchoolList.body());
+                    } else {
+                        mBaseActivity.showToast(responseSchoolList.body().getMessage());
+                    }
+                } else {
+                    mBaseActivity.showToast(mBaseActivity.getString(R.string.no_data_found_msg));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetAllSchoolResponse> call, Throwable t) {
+                //   mBaseActivity.hideDialog();
+                mBaseActivity.showToast(t.getMessage());
+            }
+        });
+    }
+
+
+    /**
+     * This method is used to check validations
+     *
+     * @param name
+     */
+    public void checkValidations(String name ) {
+        if (TextUtils.isEmpty(name)) {
+            return;
+        } else if (name.length() < 4) {
+            mBaseActivity.showToast("Please enter school name");
+        } else {
+            mSchoolCallback.onSuccess("");
+        }
+    }
+
+
+
+}

@@ -1,0 +1,139 @@
+package com.android.shadow.views.dashboard;
+
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
+
+import com.android.shadow.R;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.utils.SharedPrefsHelper;
+import com.android.shadow.views.core.BaseActivity;
+import com.android.shadow.views.profile.ourprofile.CompanyProfileFragment;
+import com.android.shadow.views.profile.ourprofile.UserProfileFragment;
+import com.android.shadow.views.profile.ourprofile.SchoolProfileFragment;
+
+/**
+ * Created by jindaldipanshu on 5/30/2017.
+ */
+
+public class DasdboardBaseActivity extends BaseActivity {
+    protected FrameLayout mFrameLayout;
+    protected ImageView mProfileImageView, mSearchImageView, mBlogImageView;
+    protected View mProfileView, mSearchView, mBlogView;
+    protected SharedPrefsHelper mSharedPrefsHelper;
+    protected String mUserRole;
+    protected ImageView mStar1ImgVw, mStar2ImgVw, mStar3ImgVw, mStar4ImgVw, mStar5ImgVw;
+    protected ImageView mNotificationImageView, mMessageImageView, mRequestImageView;
+    protected  Toolbar toolbar;
+    protected RelativeLayout mRatingRl,mSearchRl;
+
+
+    @Override
+    public void dispose() {
+
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void initViews() {
+          toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        mSharedPrefsHelper = new SharedPrefsHelper(this);
+        mUserRole = mSharedPrefsHelper.get(PreferenceKeys.PREF_REGIS);
+        mFrameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        //  mBlogImageView = (ImageView) findViewById(R.id.image_view_blog);
+        mSearchImageView = (ImageView) findViewById(R.id.image_view_search);
+        mProfileImageView = (ImageView) findViewById(R.id.image_view_profile);
+
+        mProfileView = (View) findViewById(R.id.view_profile);
+        mSearchView = (View) findViewById(R.id.view_search);
+
+        mRatingRl =(RelativeLayout)toolbar.findViewById(R.id.rl_toolbar);
+        mSearchRl =(RelativeLayout)toolbar.findViewById(R.id.rl_search_view);
+         mSearchRl.setVisibility(View.GONE);
+
+        mProfileImageView.setBackground(ContextCompat.getDrawable(this, R.drawable.profile_purple));
+
+        mStar1ImgVw = (ImageView)toolbar. findViewById(R.id.iv_star1);
+        mStar2ImgVw = (ImageView) toolbar.findViewById(R.id.iv_star2);
+        mStar3ImgVw = (ImageView)toolbar. findViewById(R.id.iv_star3);
+        mStar4ImgVw = (ImageView) toolbar.findViewById(R.id.iv_star4);
+        mStar5ImgVw = (ImageView) toolbar.findViewById(R.id.iv_star5);
+        
+        mNotificationImageView = (ImageView) toolbar. findViewById(R.id.iv_notification);
+        mMessageImageView = (ImageView)toolbar.  findViewById(R.id.iv_message);
+        mRequestImageView = (ImageView)toolbar. findViewById(R.id.iv_request);
+
+    }
+
+    /**
+     * This method is used to check which user role is registered
+     * either user role,school role or company role
+     * and replace fragment according to that user.
+     */
+    protected void replaceProfileFragment() {
+        if (mUserRole.contains("USER") || mUserRole.contains("user")) {
+            replaceFragment(new UserProfileFragment(), null);
+        } else if (mUserRole.contains("SCHOOL")  || mUserRole.contains("school")) {
+            replaceFragment(new SchoolProfileFragment(), null);
+        } else if (mUserRole.contains("COMPANY") || mUserRole.contains("company")) {
+            replaceFragment(new CompanyProfileFragment(), null);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    protected void setRating(int rating) {
+        switch (rating) {
+            case 1:
+                mStar1ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar3ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar4ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar5ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                break;
+            case 2:
+                mStar1ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar4ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar5ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                break;
+            case 3:
+                mStar1ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar4ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar5ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                break;
+            case 4:
+                mStar1ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar4ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar5ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                break;
+            case 5:
+                mStar1ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar4ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar5ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                break;
+        }
+    }
+
+
+}

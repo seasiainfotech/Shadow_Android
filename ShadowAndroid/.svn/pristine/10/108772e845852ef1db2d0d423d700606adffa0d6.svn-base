@@ -1,0 +1,231 @@
+package com.android.shadow.views.profile.editprofile;
+
+import android.content.Intent;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.android.shadow.R;
+import com.android.shadow.adapter.InterestsAdapter;
+import com.android.shadow.dialog.InterestsDialog;
+import com.android.shadow.dialog.OccupationsDialog;
+import com.android.shadow.dialog.SchoolListDialog;
+import com.android.shadow.dialog.SocialMediaDialog;
+import com.android.shadow.imagechooser.api.ChooserType;
+import com.android.shadow.model.input.EditProfileInput;
+import com.android.shadow.model.output.GetAllInterestsResponse;
+import com.android.shadow.model.output.GetAllOccupationResponse;
+import com.android.shadow.model.output.GetProfileResponse;
+import com.android.shadow.presenter.EditProfilePresenter;
+import com.android.shadow.presenter.EditUserProfilePresenter;
+import com.android.shadow.views.videoRecording.CameraUploadActivity;
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+
+import retrofit2.Response;
+
+public class EditProfileUserActivity extends EditProfileBaseActivity implements View.OnClickListener,
+        SchoolListDialog.SchoolNameCallback, EditProfilePresenter.OccupationCallback, InterestsDialog.EditInterestsCallback {
+
+    private EditText mUserNameEditText, mCompNmEditText;
+    protected TextView mUserNameTextView, mSchoolNmTextView;
+    private GridView mInterestsGridView;
+    private InterestsAdapter mInterestsAdapter;
+
+    private ArrayList<EditProfileInput.Interest> mInterestsList;
+    private ImageView mVideoUploadImageView;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_edit_profile_user;
+    }
+
+    @Override
+    protected void initViews() {
+        super.initViews();
+        mUserNameTextView = (TextView) findViewById(R.id.text_view_user_name);
+        mUserNameEditText = (EditText) findViewById(R.id.edit_text_user_name);
+        mSchoolNmTextView = (TextView) findViewById(R.id.text_view_school_name);
+        mCompNmEditText = (EditText) findViewById(R.id.edit_text_add_comp);
+        mInterestsGridView = (GridView) findViewById(R.id.grid_view_interests);
+        mVideoUploadImageView = (ImageView) findViewById(R.id.iv_video_upload);
+        mVideoUploadImageView.setOnClickListener(this);
+        mSchoolNmTextView.setOnClickListener(this);
+
+
+        findViewById(R.id.iv_plus_occupations).setOnClickListener(this);
+        findViewById(R.id.iv_minus_occupations).setOnClickListener(this);
+        findViewById(R.id.iv_plus_interests).setOnClickListener(this);
+        findViewById(R.id.iv_minus_interests).setOnClickListener(this);
+        findViewById(R.id.iv_add_social_media).setOnClickListener(this);
+        findViewById(R.id.image_view_save).setOnClickListener(this);
+        findViewById(R.id.rl_add_image).setOnClickListener(this);
+        findViewById(R.id.image_view_back).setOnClickListener(this);
+        //iv_add_social_media
+
+        mInterestsList = new ArrayList<>();
+
+        addInterestsData();
+
+        setDataOnUi();
+        setOccupationsAdapter();
+        setInterestsAdapter();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (editProfilePresenter == null) {
+            editProfilePresenter = new EditProfilePresenter(this, this);
+        }
+    }
+
+    private void addInterestsData() {
+        if (profileResponse != null && profileResponse.getData() != null
+                && profileResponse.getData().getInterest() != null && profileResponse.getData().getInterest().size() > 0) {
+
+            ArrayList<GetProfileResponse.Interest> occuList = profileResponse.getData().getInterest();
+            for (int i = 0; i < occuList.size(); i++) {
+                EditProfileInput.Interest interests = new EditProfileInput.Interest();
+                interests.setName(occuList.get(i).getName());
+                mInterestsList.add(interests);
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.image_view_back:
+                finish();
+                break;
+            case R.id.rl_add_image:
+                editProfilePresenter.chooseImage();
+                break;
+            case R.id.image_view_save:
+                EditUserProfilePresenter userProfilePresenter = new EditUserProfilePresenter(this);
+                userProfilePresenter.checkValidations(mInterestsList, mOccupationsList, mSelectedMediaList,
+                        mUserId,
+                        mSchoolNmTextView.getText().toString(),
+                        mCompNmEditText.getText().toString(), mBioEditText.getText().toString(), userImage
+                );
+                break;
+            case R.id.iv_add_social_media:
+                SocialMediaDialog socialMediaDialog = new SocialMediaDialog(this, this);
+                socialMediaDialog.showMediaDialog(mSelectedMediaList, mAllSocialMediaList);
+                break;
+            case R.id.text_view_school_name:
+                SchoolListDialog schoolListDialog = new SchoolListDialog(this, this, 0);
+                schoolListDialog.showSchoolDialog(null);
+                break;
+            case R.id.iv_plus_occupations:
+                OccupationsDialog occupationsDialog = new OccupationsDialog(this, this);
+                occupationsDialog.getAllOccupations(mOccupationsList, mUserId);
+
+                break;
+            case R.id.iv_minus_occupations:
+                OccupationsDialog occupationDialog = new OccupationsDialog(this, this);
+                occupationDialog.getAllOccupations(mOccupationsList, mUserId);
+                break;
+            case R.id.iv_plus_interests:
+                InterestsDialog interestsDialog = new InterestsDialog(this, this);
+                interestsDialog.getAllOccupations(mInterestsList, mUserId);
+
+                break;
+            case R.id.iv_minus_interests:
+                InterestsDialog interestDialog = new InterestsDialog(this, this);
+                interestDialog.getAllOccupations(mInterestsList, mUserId);
+                break;
+
+            case R.id.iv_video_upload:
+                Intent videoIntent = new Intent(this, CameraUploadActivity.class);
+                startActivity(videoIntent);
+                break;
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK &&
+                (requestCode == ChooserType.REQUEST_PICK_PICTURE ||
+                        requestCode == ChooserType.REQUEST_CAPTURE_PICTURE)) {
+            if (editProfilePresenter.imageChooserManager == null) {
+                editProfilePresenter.reinitializeImageChooser();
+            }
+            editProfilePresenter.imageChooserManager.submit(requestCode, data);
+        }
+    }
+
+
+    @Override
+    public void getSchoolName(String schoolName) {
+        mSchoolNmTextView.setText(schoolName);
+    }
+
+    @Override
+    public void onInterestsListSuccess(Response<GetAllInterestsResponse> response) {
+
+    }
+
+    @Override
+    public void onOccupationListSuccess(Response<GetAllOccupationResponse> response) {
+
+    }
+
+    @Override
+    public void getInterestsList(ArrayList<EditProfileInput.Interest> interestList) {
+        mInterestsList = interestList;
+        mInterestsAdapter.notifyAdapter(interestList);
+    }
+
+    protected void setInterestsAdapter() {
+        mInterestsAdapter = new InterestsAdapter(this, mInterestsList);
+        mInterestsGridView.setAdapter(mInterestsAdapter);
+    }
+
+
+    /**
+     * This method is used to set data on ui
+     */
+    private void setDataOnUi() {
+        if (profileResponse != null && profileResponse.getData() != null) {
+            GetProfileResponse.Data profileData = profileResponse.getData();
+            String userName = profileData.getUserName();
+            String companyName = profileData.getCompanyName();
+            String schoolName = profileData.getSchoolName();
+            String bio = profileData.getBio();
+            mUserNameEditText.setText(userName);
+            mUserNameTextView.setText(userName);
+            String imageUrl = profileData.getProfileImageUrl();
+            if (!TextUtils.isEmpty(imageUrl)) {
+                Glide.with(this).load(imageUrl).into(mAddImageView);
+            }
+
+            if (TextUtils.isEmpty(companyName)) {
+                mCompNmEditText.setText("");
+            } else {
+                mCompNmEditText.setText(companyName);
+            }
+
+            if (TextUtils.isEmpty(schoolName)) {
+                mSchoolNmTextView.setText("");
+            } else {
+                mSchoolNmTextView.setText(schoolName);
+            }
+
+            if (TextUtils.isEmpty(bio)) {
+                mBioEditText.setText("");
+            } else {
+                mBioEditText.setText(bio);
+            }
+
+        }
+    }
+
+}

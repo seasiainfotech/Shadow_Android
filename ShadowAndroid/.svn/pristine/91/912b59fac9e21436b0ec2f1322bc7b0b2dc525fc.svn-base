@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "D:\\android-sdk-windows\\Android Projects\\Shadow\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi\\ic_launcher.png",
+        "source": "D:\\android-sdk-windows\\Android Projects\\Shadow\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\android-sdk-windows\\Android Projects\\Shadow\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi\\ic_launcher_round.png",
+        "source": "D:\\android-sdk-windows\\Android Projects\\Shadow\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.png"
+    }
+]

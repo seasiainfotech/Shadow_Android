@@ -1,0 +1,296 @@
+package com.android.shadow.views.auth;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.android.shadow.R;
+import com.android.shadow.api.AuthenticationInterceptor;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.dialog.CountryDialog;
+import com.android.shadow.model.input.EditProfileInput;
+import com.android.shadow.model.input.SignupInput;
+import com.android.shadow.model.output.CountryCodeOutput;
+import com.android.shadow.model.output.EditProfileResponse;
+import com.android.shadow.model.output.PhoneOtpResponse;
+import com.android.shadow.presenter.PhoneOtpPresenter;
+import com.android.shadow.presenter.SignUpPresenter;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.utils.SharedPrefsHelper;
+import com.android.shadow.utils.Utilities;
+import com.android.shadow.views.auth.company.CompanyActivity;
+import com.android.shadow.views.auth.forgotpassword.SetNewPasswordActivity;
+import com.android.shadow.views.auth.school.SchoolActivity;
+import com.android.shadow.views.auth.user.User1Activity;
+import com.android.shadow.views.core.BaseActivity;
+import com.android.shadow.views.dashboard.DashboardActivity;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
+public class PhoneVerificationActivity extends BaseActivity implements View.OnClickListener,
+        CountryDialog.CountrySelect, SignUpPresenter.SignUpCallback,
+        PhoneOtpPresenter.PhoneOtpCallback, TextWatcher {
+
+    private EditText mPhoneNumberEditText;
+    private TextView mNextTextView, mCountryCodeTextView;
+    private CountryDialog countryDialog;
+    private String phonenoCode = "+1";
+    private ArrayList<CountryCodeOutput.Country> mCountryList;
+    private Bundle mBundle;
+    private SharedPrefsHelper sharedPrefsHelper;
+    private SignUpPresenter mSignUpPresenter;
+    private TextView mResendTextView;
+    private boolean isEmail = false;
+    private PhoneOtpPresenter phoneForgotPasswordPresenter;
+    private String mSignUpType;
+    private boolean isPhoneConfirm;
+
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_phone_verification;
+    }
+
+    @Override
+    protected void initViews() {
+        mBundle = getIntent().getExtras();
+        mSignUpType = getIntent().getStringExtra("sign_up_type");
+        isPhoneConfirm = getIntent().getBooleanExtra("confirmation", false);
+        mPhoneNumberEditText = (EditText) findViewById(R.id.edit_text_number);
+        mNextTextView = (TextView) findViewById(R.id.text_view_next_number);
+        mNextTextView.setOnClickListener(this);
+        findViewById(R.id.image_view_back).setOnClickListener(this);
+        mCountryCodeTextView = (TextView) findViewById(R.id.tv_country_code);
+        mCountryCodeTextView.setOnClickListener(this);
+        mPhoneNumberEditText.addTextChangedListener(this);
+    }
+
+    @Override
+    public void dispose() {
+        mCountryList = null;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        if (isPhoneConfirm) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
+
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        Utilities.hideKeypad(view);
+        int id = view.getId();
+        switch (id) {
+            case R.id.tv_country_code:
+                if (!Utilities.checkInternet(PhoneVerificationActivity.this)) {
+                    showToast(R.string.no_internet_msg);
+                } else {
+                    if (mCountryList == null || mCountryList.size() == 0) {
+                        getPhoneCountry();
+                    } else {
+                        if (countryDialog == null)
+                            countryDialog = new CountryDialog(PhoneVerificationActivity.this, this);
+                        countryDialog.showCountryDialog(mCountryList);
+                    }
+                }
+                break;
+            case R.id.image_view_back:
+                if (isPhoneConfirm) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else
+                    finish();
+                break;
+
+            case R.id.text_view_next_number:
+                String phone = mPhoneNumberEditText.getText().toString().trim();
+                if (isPhoneConfirm) {
+                    if (TextUtils.isEmpty(phone) || phone.length() < 10) {
+                        showToast("Please enter a valid phone number");
+                    } else {
+                        if (!Utilities.checkInternet(this)) {
+                            showToast(R.string.no_internet_msg);
+                        } else {
+                            checkResponse();
+                        }
+                    }
+                } else {
+
+                    if (mBundle == null) {     //user   sign up but not verify otp and comming from login Activity
+                        PhoneOtpPresenter phoneForgotPasswordPresenter = new PhoneOtpPresenter(this, this);
+                        phoneForgotPasswordPresenter.checkValidations(mPhoneNumberEditText.getText().toString().trim(),
+                                mCountryCodeTextView.getText().toString().trim());
+
+                    } else {
+                        if (mSignUpPresenter == null)
+                            mSignUpPresenter = new SignUpPresenter(this, PhoneVerificationActivity.this);
+                        mSignUpPresenter.checkPhoneValidation(phone,
+                                mCountryCodeTextView.getText().toString().trim(), mBundle);
+                    }
+                }
+
+                break;
+        }
+    }
+
+    private void getPhoneCountry() {
+        showDialog();
+        Call<CountryCodeOutput> response = AuthenticationInterceptor.getRestAdapter().getCountryCode();
+        response.enqueue(new Callback<CountryCodeOutput>() {
+            @Override
+            public void onResponse(Call<CountryCodeOutput> call, Response<CountryCodeOutput> respone) {
+                hideDialog();
+                if (respone != null && respone.body() != null && respone.body().getResponse() != null &&
+                        respone.body().getResponse().getCode() != null) {
+                    if (respone.body().getResponse().getCode().equals("201")) {
+                        if (respone.body().getResponse().getResult() != null) {
+                            mCountryList = respone.body().getResponse().getResult().getCountry();
+                            if (countryDialog == null)
+                                countryDialog = new CountryDialog(PhoneVerificationActivity.this, PhoneVerificationActivity.this);
+                            countryDialog.showCountryDialog(mCountryList);
+                        } else {
+                            showToast(getString(R.string.no_data_found_msg));
+                        }
+
+                    } else {
+                        showToast(getString(R.string.no_data_found_msg));
+                    }
+
+                } else {
+                    showToast(getString(R.string.server_error_msg));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CountryCodeOutput> call, Throwable t) {
+                hideDialog();
+                showToast(t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void getCountryCode(String phoneCode) {
+        phonenoCode = phoneCode;
+        mCountryCodeTextView.setText(phoneCode);
+    }
+
+    @Override
+    public void onPhoneOtpSuccess(Response<PhoneOtpResponse> responePhoneForgot) {
+        //chnage password
+        if (responePhoneForgot != null && responePhoneForgot.body() != null) {
+            if (responePhoneForgot.body().getStatus().equals("200")) {
+                Intent setNewPasswordIntent = new Intent(this, SetNewPasswordActivity.class);
+                setNewPasswordIntent.putExtra("coming_from", 1); // 1 for phoneforgotactivity, 0 for emailForgotActivity
+                setNewPasswordIntent.putExtra("user_id", responePhoneForgot.body().getData().getUserId());
+                setNewPasswordIntent.putExtra("phone_otp", responePhoneForgot.body().getData().getPhoneOtp());
+                startActivity(setNewPasswordIntent);
+            } else if (responePhoneForgot.body().getStatus().equals("404")) {
+                showToast(responePhoneForgot.body().getMessage());
+            }
+        } else {
+            showToast(getString(R.string.server_error_msg));
+        }
+
+    }
+
+    @Override
+    public void onSignUpSuccess(SignupInput signupInput, boolean isEmail) {
+        Intent intent = new Intent(this, EmailPhoneOtpVerifiyActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (isEmail) {
+            intent.putExtra("isEmail", isEmail);
+            intent.putExtra("email", signupInput.getEmail());
+        } else {
+            intent.putExtra("isEmail", isEmail);
+            intent.putExtra("phone", signupInput.getMobileNumber());
+            intent.putExtra("country_code", signupInput.getCountryCode());
+        }
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence number, int i, int i1, int i2) {
+        if (number != null && number.length() >= 10) {
+            mNextTextView.setTextColor(getResources().getColor(android.R.color.white));
+            mNextTextView.setBackgroundDrawable(getResources().getDrawable(R.drawable.round_filled_purple_border));
+        } else {
+            mNextTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
+            mNextTextView.setBackgroundDrawable(getResources().getDrawable(R.drawable.round_purple_border));
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
+
+
+    private void checkResponse() {
+        showDialog();
+        SharedPrefsHelper sharedPrefsHelper = new SharedPrefsHelper(this);
+        String userId = sharedPrefsHelper.get(PreferenceKeys.PREF_USER_ID);
+        EditProfileInput editProfileInput = new EditProfileInput();
+        editProfileInput.setUserId(userId);
+        editProfileInput.setMobileNumber(mPhoneNumberEditText.getText().toString().trim());
+        editProfileInput.setCountryCode(mCountryCodeTextView.getText().toString().trim());
+
+        Call<EditProfileResponse> editProfileResponseCall = GetRestAdapter.getRestAdapter(true).editProfile(editProfileInput);
+        editProfileResponseCall.enqueue(new Callback<EditProfileResponse>() {
+            @Override
+            public void onResponse(Call<EditProfileResponse> call, Response<EditProfileResponse> response) {
+                hideDialog();
+                if (response != null && response.body() != null) {
+                    if (response.body().getStatus().equals("200")) {
+                        Intent intent = new Intent(PhoneVerificationActivity.this, DashboardActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        showToast(response.body().getMessage());
+                    }
+
+                } else {
+                    showToast(R.string.no_data_found_msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EditProfileResponse> call, Throwable t) {
+                hideDialog();
+                showToast(t.getMessage());
+
+            }
+        });
+
+    }
+
+
+}
+
+

@@ -1,0 +1,62 @@
+package com.android.shadow.views.dashboard;
+
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.View;
+
+import com.android.shadow.R;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.views.search.SearchFragment;
+
+public class DashboardActivity extends DasdboardBaseActivity implements View.OnClickListener {
+
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_dashboard;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void initViews() {
+        super.initViews();
+        //  mBlogImageView.setOnClickListener(this);
+        mProfileImageView.setOnClickListener(this);
+        mSearchImageView.setOnClickListener(this);
+        mProfileView.setOnClickListener(this);
+        mSearchView.setOnClickListener(this);
+        replaceProfileFragment();
+        String userID=mSharedPrefsHelper.get(PreferenceKeys.PREF_USER_ID);
+        Log.e("userID-------",userID);
+    }
+
+
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.image_view_profile || id == R.id.view_profile) {
+            replaceProfileFragment();
+            mProfileImageView.setBackground(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.profile_purple));
+            mSearchImageView.setBackground(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_search_gray));
+
+        } else if (id == R.id.image_view_search || id == R.id.view_search) {
+            replaceFragment(new SearchFragment(), null);
+            mProfileImageView.setBackground(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.profile_gray));
+            mSearchImageView.setBackground(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_search_purple));
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+}

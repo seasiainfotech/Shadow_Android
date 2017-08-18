@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <LinearLayout
+                android:id="@+id/ll_rating"
+                android:background="#ffffff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_star1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/iv_message"
+                    android:background="@drawable/ic_star_grey" />
+
+                <ImageView
+                    android:id="@+id/iv_star2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_toRightOf="@+id/iv_message"
+                    android:background="@drawable/ic_star_grey" />
+
+                <ImageView
+                    android:id="@+id/iv_star3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_toRightOf="@+id/iv_message"
+                    android:background="@drawable/ic_star_grey" />
+
+                <ImageView
+                    android:id="@+id/iv_star4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_toRightOf="@+id/iv_message"
+                    android:background="@drawable/ic_star_grey" />
+
+                <ImageView
+                    android:id="@+id/iv_star5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_toRightOf="@+id/iv_message"
+                    android:background="@drawable/ic_star_grey" />
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_message"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/iv_request"
+                android:background="@drawable/message" />
+
+            <ImageView
+                android:id="@+id/iv_request"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/shadow_purple"
+
+                />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_user_profile"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_below="@+id/ll_rating"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/profile_gray"
+                app:border_color="@color/colorPrimary"
+                app:border_width="2dp" />
+
+            <ImageView
+                android:id="@+id/iv_video"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@+id/ll_rating"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="90dp"
+                android:layout_toRightOf="@+id/iv_user_profile"
+                android:background="@drawable/video_camera"
+
+                />
+
+            <ImageView
+                android:id="@+id/iv_url1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@+id/ll_rating"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="70dp"
+                android:background="@android:drawable/ic_delete"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/iv_url2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@+id/ll_rating"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="70dp"
+                android:layout_toRightOf="@+id/iv_url1"
+                android:background="@android:drawable/ic_delete"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/iv_url3"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@+id/ll_rating"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="90dp"
+                android:layout_toLeftOf="@+id/iv_user_profile"
+                android:background="@drawable/linkedin_icon" />
+
+            <TextView
+                android:id="@+id/text_view_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_user_profile"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="name"
+                android:textColor="@android:color/black"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_view_user_school"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:gravity="center"
+                android:text="school"
+                android:textColor="@android:color/black"
+                android:textSize="17sp"
+                android:layout_below="@+id/text_view_user_name"
+                android:layout_centerHorizontal="true"
+                />
+
+            <View
+                android:id="@+id/view_center"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_below="@+id/text_view_user_school"
+                android:layout_centerHorizontal="true"></View>
+
+            <TextView
+                android:id="@+id/text_view_user_company"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_below="@+id/text_view_user_school"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="company"
+                android:textColor="@android:color/black"
+                android:textSize="17sp" />
+
+            <!-- <TextView
+                 android:id="@+id/text_view_occupation"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@+id/text_view_school"
+                 android:layout_marginLeft="10dp"
+                 android:layout_marginTop="10dp"
+                 android:layout_toRightOf="@+id/view_center"
+                 android:text="occupation"
+                 android:textColor="@android:color/black"
+                 android:textSize="17sp" />-->
+
+            <TextView
+                android:id="@+id/tv_following"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_user_company"
+                android:layout_marginTop="20dp"
+                android:layout_toLeftOf="@+id/view_center"
+                android:gravity="center_horizontal"
+                android:text="3"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_followers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_user_company"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@+id/view_center"
+                android:gravity="center_horizontal"
+                android:text="3"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_shadow_followers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_followers"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/view_center"
+                android:gravity="center"
+                android:text="Shadowed by shadow user"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_shadow_following"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_following"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/view_center"
+                android:gravity="center"
+                android:text="Shadowed a shadow user"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text_view_bio"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/text_view_full_profile_user"
+            android:text="View Full Profile"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>

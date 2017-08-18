@@ -1,0 +1,95 @@
+package com.android.shadow.adapter.ratingcomment;
+
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.android.shadow.R;
+import com.android.shadow.model.output.GetAllRatingResponse;
+import com.android.shadow.views.core.BaseActivity;
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+
+/**
+ * Created by singhgharjyot on 6/16/2017.
+ */
+
+public class OccupationRatingAndCommentAdapter extends RecyclerView.Adapter<OccupationRatingAndCommentAdapter.ViewHolder> {
+    private ArrayList<GetAllRatingResponse.Data.OccupationRatings> mList;
+    private BaseActivity mActivity;
+
+    public OccupationRatingAndCommentAdapter(BaseActivity context, ArrayList<GetAllRatingResponse.Data.OccupationRatings> mList) {
+        this.mList = (ArrayList<GetAllRatingResponse.Data.OccupationRatings>)mList;
+        this.mActivity = context;
+    }
+
+    @Override
+    public OccupationRatingAndCommentAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View itemLayoutView = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.row_rating_comment, null);
+        // create ViewHolder
+        ViewHolder viewHolder = new ViewHolder(itemLayoutView);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        viewHolder.mNameTextView.setText(mList.get(position).getUserDTO().getUserName());
+        String imageUrl = mList.get(position).getUserDTO().getProfileImageUrl();
+        Glide.with(mActivity).load(imageUrl).
+                error(mActivity.getResources().getDrawable(R.drawable.profile_gray)).
+                into(viewHolder.mProfileImage);
+        String days=mList.get(position).getTimeAgo();
+        if (TextUtils.isEmpty(days)){
+            viewHolder.mPostTimeTextView.setText("");
+        }else {
+            viewHolder.mPostTimeTextView.setText(days);
+        }
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return mList == null ? 0 : mList.size();
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private RelativeLayout mRatingCommentRl;
+        private ImageView mProfileImage, mRatingStar1, mRatingStar2, mRatingStar3, mRatingStar4, mRatingStar5;
+        private TextView mNameTextView, mCommentTextView, mPostTimeTextView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mProfileImage = (ImageView) itemView.findViewById(R.id.image_view_profile_row);
+            mNameTextView = (TextView) itemView.findViewById(R.id.text_view_name_row);
+            mCommentTextView = (TextView) itemView.findViewById(R.id.text_view_comment);
+            mPostTimeTextView = (TextView) itemView.findViewById(R.id.text_view_days);
+            mRatingStar1 = (ImageView) itemView.findViewById(R.id.iv_star1);
+            mRatingStar2 = (ImageView) itemView.findViewById(R.id.iv_star2);
+            mRatingStar3 = (ImageView) itemView.findViewById(R.id.iv_star3);
+            mRatingStar4 = (ImageView) itemView.findViewById(R.id.iv_star4);
+            mRatingStar5 = (ImageView) itemView.findViewById(R.id.iv_star5);
+            mRatingCommentRl = (RelativeLayout) itemView.findViewById(R.id.rl_rating_comment);
+
+            mRatingCommentRl.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getLayoutPosition();
+            switch (view.getId()) {
+                case R.id.rl_rating_comment:
+
+                    break;
+            }
+        }
+    }
+}

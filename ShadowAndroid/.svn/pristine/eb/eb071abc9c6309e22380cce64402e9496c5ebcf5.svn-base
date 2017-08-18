@@ -1,0 +1,70 @@
+package com.android.shadow.views.dashboard;
+
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+
+import com.android.shadow.R;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.utils.SharedPrefsHelper;
+import com.android.shadow.views.core.BaseActivity;
+import com.android.shadow.views.profile.ourprofile.CompanyProfileFragment;
+import com.android.shadow.views.profile.ourprofile.UserProfileFragment;
+import com.android.shadow.views.profile.ourprofile.SchoolProfileFragment;
+
+/**
+ * Created by jindaldipanshu on 5/30/2017.
+ */
+
+public class DasdboardBaseActivity extends BaseActivity {
+    protected FrameLayout mFrameLayout;
+    protected ImageView mProfileImageView, mSearchImageView, mBlogImageView;
+    protected View mProfileView, mSearchView, mBlogView;
+    protected SharedPrefsHelper mSharedPrefsHelper;
+    protected String mUserRole;
+
+    @Override
+    public void dispose() {
+
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void initViews() {
+        mSharedPrefsHelper = new SharedPrefsHelper(this);
+        mUserRole = mSharedPrefsHelper.get(PreferenceKeys.PREF_REGIS);
+        mFrameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        //  mBlogImageView = (ImageView) findViewById(R.id.image_view_blog);
+        mSearchImageView = (ImageView) findViewById(R.id.image_view_search);
+        mProfileImageView = (ImageView) findViewById(R.id.image_view_profile);
+
+        mProfileView = (View) findViewById(R.id.view_profile);
+        mSearchView = (View) findViewById(R.id.view_search);
+        mProfileImageView.setBackground(ContextCompat.getDrawable(this, R.drawable.profile_purple));
+
+    }
+
+    /**
+     * This method is used to check which user role is registered
+     * either user role,school role or company role
+     * and replace fragment according to that user.
+     */
+    protected void replaceProfileFragment() {
+        if (mUserRole.contains("USER") || mUserRole.contains("user")) {
+            replaceFragment(new UserProfileFragment(), null);
+        } else if (mUserRole.contains("SCHOOL")  || mUserRole.contains("school")) {
+            replaceFragment(new SchoolProfileFragment(), null);
+        } else if (mUserRole.contains("COMPANY") || mUserRole.contains("company")) {
+            replaceFragment(new CompanyProfileFragment(), null);
+        }
+    }
+
+}

@@ -1,0 +1,53 @@
+package com.android.shadow.views.profile;
+
+import android.os.Bundle;
+
+import com.android.shadow.R;
+import com.android.shadow.views.core.BaseActivity;
+import com.android.shadow.views.profile.anotheruserprofile.AnotherCompanyProfileFragment;
+import com.android.shadow.views.profile.anotheruserprofile.AnotherSchoolProfileFragment;
+import com.android.shadow.views.profile.anotheruserprofile.AnotherUserProfileFragment;
+
+public class AnotherUserProfileActivity extends BaseActivity {
+    protected String mUserRole;
+    private Bundle bundle;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_another_user_profile;
+    }
+
+    @Override
+    protected void initViews() {
+        findViewById(R.id.frame_layout);
+        bundle = getIntent().getExtras();
+        mUserRole = bundle.getString("user_role");
+        replaceProfileFragment(bundle);
+    }
+
+    @Override
+    public void dispose() {
+
+    }
+
+    /**
+     * This method is used to check which user role is registered
+     * either user role,school role or company role
+     * and replace fragment according to that user.
+     */
+    protected void replaceProfileFragment(Bundle bundle) {
+        if (mUserRole.contains("USER") || mUserRole.contains("user")) {
+            replaceFragment(new AnotherUserProfileFragment(), bundle);
+        } else if (mUserRole.contains("SCHOOL") || mUserRole.contains("school")) {
+            replaceFragment(new AnotherSchoolProfileFragment(), bundle);
+        } else if (mUserRole.contains("COMPANY") || mUserRole.contains("company")) {
+            replaceFragment(new AnotherCompanyProfileFragment(), bundle);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+}

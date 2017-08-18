@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_color"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/rl_1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/half_image_height_profile"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/rl_border_grey">
+
+            </RelativeLayout>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_user_profile"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_below="@+id/rl_header_common"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/profile_gray" />
+
+            <ImageView
+                android:id="@+id/iv_video"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@+id/rl_header_common"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="@dimen/iv_video_margin_top"
+                android:layout_toRightOf="@+id/iv_user_profile"
+                android:background="@drawable/video_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_video"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/iv_user_profile"
+                android:text="click to view"
+                android:textColor="@color/school_company_color"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/iv_rating_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@+id/rl_header_common"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="65dp"
+                android:layout_toLeftOf="@+id/iv_user_profile"
+                android:background="@drawable/star_unselected" />
+
+            <TextView
+                android:id="@+id/text_view_average_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rl_header_common"
+                android:layout_marginTop="@dimen/avg_rating_text_margin_top"
+                android:layout_toLeftOf="@+id/iv_rating_icon"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_no_of_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_average_rating"
+                android:layout_toLeftOf="@+id/tv_No_of_rating_text"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_No_of_rating_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_average_rating"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_toLeftOf="@+id/iv_user_profile"
+                android:text="ratings"
+                android:textColor="@color/school_company_color"
+                android:textSize="12sp" />
+
+            <!-- <TextView
+                 android:id="@+id/text_view_user_name"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@+id/iv_user_profile"
+                 android:layout_centerHorizontal="true"
+                 android:layout_marginTop="20dp"
+                 android:gravity="center"
+                 android:text="@string/testing"
+                 android:textColor="@color/username_color"
+                 android:textSize="17sp"
+                 android:textStyle="bold" />-->
+
+            <RelativeLayout
+                android:id="@+id/rl_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rl_1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/rl_border_grey">
+
+                <View
+                    android:id="@+id/view_center"
+                    android:layout_width="1dp"
+                    android:layout_height="@dimen/company_seprator"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/background_color" />
+
+                <TextView
+                    android:id="@+id/tv_following"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_toLeftOf="@+id/view_center"
+                    android:gravity="center_horizontal"
+                    android:text="0"
+                    android:textColor="@color/color_number"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_followers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@+id/view_center"
+                    android:gravity="center_horizontal"
+                    android:text="0"
+                    android:textColor="@color/color_number"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_shadow_followers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_followers"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@+id/view_center"
+                    android:gravity="center"
+                    android:text="Shadowed"
+                    android:textColor="@color/school_company_color"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_shadow_following"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_following"
+                    android:layout_marginTop="5dp"
+                    android:layout_toLeftOf="@+id/view_center"
+                    android:gravity="center"
+                    android:text="Shadowers"
+                    android:textColor="@color/school_company_color"
+                    android:textSize="12sp" />
+
+                <View
+                    android:id="@+id/view_center_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/background_color" />
+
+                <TextView
+                    android:id="@+id/tv_no_companies_with_occupations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_shadow_following"
+                    android:layout_marginTop="20dp"
+                    android:layout_toLeftOf="@+id/view_center"
+                    android:gravity="center_horizontal"
+                    android:text="0"
+                    android:textColor="@color/color_number"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_users_this_school"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_shadow_following"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@+id/view_center"
+                    android:gravity="center_horizontal"
+                    android:text="0"
+                    android:textColor="@color/color_number"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_users_this_school_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_users_this_school"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@+id/view_center"
+                    android:gravity="center"
+                    android:text="Users attended this school"
+                    android:textColor="@color/school_company_color"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_no_companies_with_occupations_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_users_this_school"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toLeftOf="@+id/view_center"
+                    android:gravity="center"
+                    android:text="Company with these occupations"
+                    android:textColor="@color/school_company_color"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rl_border_grey"
+            android:focusableInTouchMode="true">
+
+            <TextView
+                android:id="@+id/tv_bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="About me"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_view_bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_bio"
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="10dp"
+                android:text="@string/testing"
+                android:textColor="@color/school_company_color"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/iv_school_location"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_below="@+id/text_view_bio"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/location_icon" />
+
+
+            <TextView
+                android:id="@+id/text_view_school_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_bio"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+               android:layout_toRightOf="@+id/iv_school_location"
+                android:gravity="center_vertical"
+                android:text="@string/testing"
+                android:textColor="@color/link_color"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/iv_school_url"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_below="@+id/text_view_school_location"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/url_icon" />
+
+            <TextView
+                android:id="@+id/text_view_school_url"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_school_location"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/iv_school_url"
+                android:gravity="center_vertical"
+                android:text="@string/testing"
+                android:textColor="@color/link_color"
+                android:textSize="12sp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view_school_url">
+
+                <include layout="@layout/layout_url_profile"></include>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text_view_full_profile_school"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:text="View Full Profile"
+            android:textColor="@color/color_number" />
+
+    </LinearLayout>
+</ScrollView>

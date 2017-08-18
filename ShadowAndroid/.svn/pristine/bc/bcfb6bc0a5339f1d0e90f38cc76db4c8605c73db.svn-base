@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_url1"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/text_view_company_url"
+        android:layout_marginBottom="10dp"
+        android:textSize="15sp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/linkdin"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_url1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:textSize="12sp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/link_color"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/iv_url1"
+        android:text="@string/testing" />
+
+    <ImageView
+        android:id="@+id/iv_url2"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/iv_url1"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/fb"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_url2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        android:textSize="12sp"
+        android:textColor="@color/link_color"
+        android:layout_below="@id/iv_url1"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/iv_url2"
+        android:text="@string/testing" />
+    <ImageView
+        android:id="@+id/iv_url3"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/iv_url2"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/twitter"
+        android:visibility="visible" />
+    <TextView
+        android:id="@+id/tv_url3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/iv_url2"
+        android:textSize="12sp"
+        android:gravity="center_vertical"
+        android:textColor="@color/link_color"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/iv_url3"
+        android:text="@string/testing" />
+
+</RelativeLayout>

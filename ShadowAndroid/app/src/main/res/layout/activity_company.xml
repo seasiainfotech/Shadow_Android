@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.android.shadow.views.auth.UsernameActivity">
+
+    <ImageView
+        android:id="@+id/image_view_back"
+        android:layout_width="@dimen/back_icon_width"
+        android:layout_height="@dimen/back_icon_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/back_icon"
+        android:backgroundTint="@color/colorPrimary" />
+
+    <ImageView
+        android:id="@+id/iv_shadow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shadow_purple"
+        android:layout_below="@+id/image_view_back"
+        android:layout_centerHorizontal="true"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_shadow"
+        android:layout_margin="20dp"
+
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/comp_selection"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/edit_text_company_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:hint="Name"
+            android:inputType="text"
+            android:singleLine="true"
+
+            android:maxLength="15"
+            />
+
+        <EditText
+            android:id="@+id/edit_text_company_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:hint="Location"
+            android:editable="false"
+            android:singleLine="true"
+            />
+
+        <TextView
+            android:id="@+id/text_view_next_comp"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/round_purple_border"
+            android:gravity="center"
+            android:padding="7dp"
+            android:text="Next"
+            android:textColor="@color/colorPrimary" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

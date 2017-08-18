@@ -1,0 +1,137 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:2:1-36:12
+	package
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:3:5-33
+		INJECTED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml
+		INJECTED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml
+		INJECTED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:2:11-69
+	android:versionCode
+		INJECTED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml
+		INJECTED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml
+uses-permission#android.permission.INTERNET
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:5:5-67
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:5:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:6:5-79
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:6:22-76
+application
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:8:5-34:19
+MERGED from [com.android.support:cardview-v7:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\1aeb3a70976921e19151d142d9816f4f03cfb3fa\output\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:design:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\f2a2a1cc5ee4d5f968bcb1fdaa2ad0c79e1cc3ca\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:transition:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\94219d578c6f4b6e5daf9db8705bf9c5d09f6644\output\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:appcompat-v7:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\007783348745fc98a23bf1ae4f5299668fa91e61\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:animated-vector-drawable:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\ff8c295611c41cd25590a063c762a07788246531\output\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-vector-drawable:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\b02f7efef3d9d40241f2c8b8fa3c0b41dd34520d\output\AndroidManifest.xml:23:5-20
+MERGED from [com.android.support:support-v4:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\c9cafa2fe5376683d910b6a9560da62286803512\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-fragment:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\45ef2d5a00d6ed36a27363e61646759520c85c0d\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-media-compat:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\1c48399c5998bd9e51f2d00c592104aa0ab46ade\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-core-ui:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\4a948a36aafe1d037f40a393f2445703415b07b6\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-core-utils:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\f8659928704a508a152afe59bb2a48387ca9a553\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-compat:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\0df3e6f4b2e9e7f2db2a4b7b0c2105b3c12dfb79\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\jindaldipanshu\.android\build-cache\6e482010bce6f294ff1df517292c46810f31dd03\output\AndroidManifest.xml:9:5-20
+	android:label
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:11:9-41
+	android:supportsRtl
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:13:9-35
+	android:roundIcon
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:12:9-54
+	android:allowBackup
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:9:9-35
+	android:icon
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:10:9-43
+	android:theme
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:14:9-40
+activity#com.android.shadow.MainActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:15:9-50
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:15:19-47
+activity#com.android.shadow.views.auth.LoginActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:16:9-62
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:16:19-59
+activity#com.android.shadow.views.SplashActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:17:9-23:20
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:17:19-55
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:18:13-22:29
+action#android.intent.action.MAIN
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:19:17-69
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:19:25-66
+category#android.intent.category.LAUNCHER
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:21:17-77
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:21:27-74
+activity#com.android.shadow.views.auth.ForgotPasswordActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:24:9-71
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:24:19-68
+activity#com.android.shadow.views.auth.UsernameActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:25:9-65
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:25:19-62
+activity#com.android.shadow.views.auth.RegistrationActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:26:9-69
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:26:19-66
+activity#com.android.shadow.views.auth.PasswordActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:27:9-65
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:27:19-62
+activity#com.android.shadow.views.auth.user.UserActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:28:9-66
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:28:19-63
+activity#com.android.shadow.views.auth.user.User1Activity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:29:9-67
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:29:19-64
+activity#com.android.shadow.views.auth.school.SchoolActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:30:9-70
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:30:19-67
+activity#com.android.shadow.views.auth.company.CompanyActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:31:9-72
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:31:19-69
+activity#com.android.shadow.views.auth.EmailActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:32:9-62
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:32:19-59
+activity#com.android.shadow.views.auth.PhoneActivity
+ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:33:9-71
+	android:name
+		ADDED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml:33:19-59
+uses-sdk
+INJECTED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:multidex:1.0.1] C:\Users\jindaldipanshu\.android\build-cache\fe26bf36371bdbd90f4f66c989c49de9a1202891\output\AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:cardview-v7:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\1aeb3a70976921e19151d142d9816f4f03cfb3fa\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:design:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\f2a2a1cc5ee4d5f968bcb1fdaa2ad0c79e1cc3ca\output\AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:recyclerview-v7:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\7ad4eb1aceb3dd0f18cecc0cb3e3ea1b4413159a\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:transition:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\94219d578c6f4b6e5daf9db8705bf9c5d09f6644\output\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\007783348745fc98a23bf1ae4f5299668fa91e61\output\AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:animated-vector-drawable:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\ff8c295611c41cd25590a063c762a07788246531\output\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\b02f7efef3d9d40241f2c8b8fa3c0b41dd34520d\output\AndroidManifest.xml:21:5-43
+MERGED from [com.android.support:support-v4:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\c9cafa2fe5376683d910b6a9560da62286803512\output\AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\45ef2d5a00d6ed36a27363e61646759520c85c0d\output\AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-media-compat:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\1c48399c5998bd9e51f2d00c592104aa0ab46ade\output\AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-ui:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\4a948a36aafe1d037f40a393f2445703415b07b6\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\f8659928704a508a152afe59bb2a48387ca9a553\output\AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-compat:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\0df3e6f4b2e9e7f2db2a4b7b0c2105b3c12dfb79\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\jindaldipanshu\.android\build-cache\6e482010bce6f294ff1df517292c46810f31dd03\output\AndroidManifest.xml:5:5-7:41
+	tools:overrideLibrary
+		ADDED from [com.android.support:design:25.2.0] C:\Users\jindaldipanshu\.android\build-cache\f2a2a1cc5ee4d5f968bcb1fdaa2ad0c79e1cc3ca\output\AndroidManifest.xml:23:9-59
+	android:targetSdkVersion
+		INJECTED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml
+		INJECTED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml
+		INJECTED from D:\android-sdk-windows\Android Projects\Shadow\app\src\main\AndroidManifest.xml

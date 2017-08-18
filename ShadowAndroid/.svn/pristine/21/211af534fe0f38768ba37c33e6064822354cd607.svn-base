@@ -1,0 +1,372 @@
+/*
+package com.android.shadow.views.profile.editprofile;
+
+import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+
+import com.android.shadow.R;
+import com.android.shadow.adapter.EditInterestsAdapter;
+import com.android.shadow.adapter.EditSkillsAdapter;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.dialog.InterestsDialog;
+import com.android.shadow.dialog.SkillsDialog;
+import com.android.shadow.imagechooser.api.ChooserType;
+import com.android.shadow.model.EditSkillsList;
+import com.android.shadow.model.input.EditProfileInput;
+import com.android.shadow.model.output.EditProfileResponse;
+import com.android.shadow.model.output.GetAllInterestsResponse;
+import com.android.shadow.model.output.GetAllOccupationResponse;
+import com.android.shadow.model.output.GetAllSchoolResponse;
+import com.android.shadow.model.output.GetAllSkillResponse;
+import com.android.shadow.model.output.GetProfileResponse;
+import com.android.shadow.presenter.EditProfilePresenter;
+import com.android.shadow.utils.Utilities;
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+*/
+/**
+ * Created by jindaldipanshu on 5/30/2017.
+ *//*
+
+
+public class EditProfileActivity extends EditProfileBaseActivity implements View.OnClickListener,
+        AdapterView.OnItemSelectedListener, SkillsDialog.EditOccupationsCallback, EditProfilePresenter.SchoolListCallback, InterestsDialog.InterestsCallback {
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_edit_profile;
+    }
+
+    @Override
+    protected void initViews() {
+        super.initViews();
+        registerClickListener();
+        setDataOnUi(profileResponse);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mEditProfilePresenter = new EditProfilePresenter(this, this);
+        if (!Utilities.checkInternet(this)) {
+            showToast(R.string.no_internet_msg);
+        } else {
+            mEditProfilePresenter.getAllSchool();
+            mEditProfilePresenter.getAllOccupation();
+            // mEditProfilePresenter.getAllSkills();
+            mEditProfilePresenter.getAllInterests();
+        }
+    }
+
+    private void setOccupSpinnerAdaper() {
+       // ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mOccupationList);
+      //  dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+      //  mOccupSpinner.setAdapter(dataAdapter);
+    }
+
+    private void setSchoolSpinnerAdapter() {
+       // ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mSchoolList);
+      //  dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+     //   mSchoolSpinner.setAdapter(dataAdapter);
+    }
+
+
+    public void setSkillsAdapter(ArrayList<?> mList) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mSkillsRecyclerView.setLayoutManager(linearLayoutManager);
+        //mSkillsAdapter = new EditSkillsAdapter(this, mList);
+       // mSkillsRecyclerView.setAdapter(mSkillsAdapter);
+    }
+
+    public void setInterestsAdapter(ArrayList<?> mList) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mInterestsRecyclerView.setLayoutManager(linearLayoutManager);
+        EditInterestsAdapter skillsAdapter = new EditInterestsAdapter(this, mList);
+        mInterestsRecyclerView.setAdapter(skillsAdapter);
+    }
+
+
+    @Override
+    public void dispose() {
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_video_upload:
+             ;
+                break;
+            case R.id.rl_add_image:
+                mEditProfilePresenter.chooseImage();
+                break;
+            case R.id.iv_add_image:
+                mEditProfilePresenter.chooseImage();
+                break;
+            case R.id.iv_plus_skills:
+                if (!Utilities.checkInternet(this)) {
+                    showToast(R.string.no_internet_msg);
+                } else {
+                    SkillsDialog skillsDialog = new SkillsDialog(baseActivity, this);
+                    skillsDialog.getAllSkills(mSkillsSelectedList);
+                }
+                break;
+            case R.id.iv_plus_interest:
+                InterestsDialog interestsDialog = new InterestsDialog(baseActivity, this);
+                interestsDialog.showInterestsDialog(mInterestsList);
+                break;
+            case R.id.iv_minus_skills:
+                SkillsDialog skillsDialog1 = new SkillsDialog(baseActivity, EditProfileActivity.this);
+                skillsDialog1.getAllSkills(mSkillsSelectedList);
+                break;
+            case R.id.iv_minus_interest:
+                InterestsDialog interestsDialog1 = new InterestsDialog(baseActivity, this);
+                interestsDialog1.showInterestsDialog(mInterestsList);
+                break;
+            case R.id.image_view_save:
+//                if (mSharedPrefsHelper == null) {
+//                    mSharedPrefsHelper = new SharedPrefsHelper(EditProfileActivity.this);
+//                }
+//                String userId = mSharedPrefsHelper.get(PreferenceKeys.PREF_USER_ID);
+//                EditProfileInput editProfileInput = new EditProfileInput();
+//                editProfileInput.setAppVersion(APP_NUMBER);
+//                editProfileInput.setAppBuildNumber(APP_BUILD_NUMBER);
+//
+//
+//                EditProfileInput.Skills skills = new EditProfileInput().new Skills();
+//                skills.setName(mSkillsList.get(0));
+//                skills.setDescription("asas");
+//
+//                ArrayList<EditProfileInput.Skills> skillses = new ArrayList<>();
+//                skillses.add(skills);
+//                editProfileInput.setSkills(skillses);
+//                editProfileInput.setUserId(userId);
+//                saveProfileResponse(editProfileInput);
+
+                break;
+
+        }
+    }
+
+    private void saveProfileResponse(EditProfileInput editProfileInput) {
+        showDialog();
+        Call<EditProfileResponse> call = GetRestAdapter.getRestAdapter(false).editProfile(editProfileInput);
+        call.enqueue(new Callback<EditProfileResponse>() {
+            @Override
+            public void onResponse(Call<EditProfileResponse> call, Response<EditProfileResponse> response) {
+                hideDialog();
+                if (response != null && response.body() != null) {
+                    if (response.body().getData() != null && response.body().getStatus() != null) {
+                        showToast(response.body().getMessage());
+                    }
+                } else {
+                    showToast(R.string.no_data_found_msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EditProfileResponse> call, Throwable t) {
+                hideDialog();
+                showToast(t.getMessage());
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK &&
+                (requestCode == ChooserType.REQUEST_PICK_PICTURE ||
+                        requestCode == ChooserType.REQUEST_CAPTURE_PICTURE)) {
+            if (mEditProfilePresenter.imageChooserManager == null) {
+                mEditProfilePresenter.reinitializeImageChooser();
+            }
+            mEditProfilePresenter.imageChooserManager.submit(requestCode, data);
+        }
+    }
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        int id = adapterView.getId();
+        switch (id) {
+            case R.id.spinner_select_school:
+                break;
+            case R.id.spinner_select_occup:
+                break;
+
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    @Override
+    public void getOccupationsList(ArrayList<EditProfileInput.Skills> skillsadded) {// skills added in dialog are coming here after closing dialog
+        this.mSkillsSelectedList = skillsadded;
+        setSkillsAdapter(mSkillsSelectedList);
+        mSkillsAdapter.notifyAdapter(mSkillsSelectedList);
+    }
+
+    @Override
+    public void onSchoolListSuccess(Response<GetAllSchoolResponse> response) {
+        if (response != null && response.body() != null) {
+            if (response.body().getData() != null && response.body().getData().getSchoolList().size() > 0) {
+                int length = response.body().getData().getSchoolList().size();
+                for (int pos = 0; pos < length; pos++) {
+                    mSchoolList.add(response.body().getData().getSchoolList().get(pos).getName());
+                }
+                setSchoolSpinnerAdapter();
+            } else {
+                showToast(response.body().getMessage());
+            }
+        } else {
+            showToast(R.string.server_error_msg);
+        }
+    }
+
+    @Override
+    public void onOccupationListSuccess(Response<GetAllOccupationResponse> response) {
+        if (response != null && response.body() != null) {
+            if (response.body().getData() != null &&
+                    response.body().getData().getOccupations() != null &&
+                    response.body().getData().getOccupations().size() > 0) {
+                for (int pos = 0; pos < response.body().getData().getOccupations().size(); pos++) {
+                    mOccupationList.add(response.body().getData().getOccupations().get(pos).getName());
+                }
+                setOccupSpinnerAdaper();
+            }
+        }
+    }
+
+
+    @Override
+    public void onSkillsListSuccess(Response<GetAllSkillResponse> response) {
+        if (response != null && response.body() != null) {
+            if (response.body().getData() != null && response.body().getData().getSkillTypes() != null &&
+                    response.body().getData().getSkillTypes().size() > 0) {
+
+                for (int pos = 0; pos < response.body().getData().getSkillTypes().size(); pos++) {
+                    mSkillsList.add(response.body().getData().getSkillTypes().get(pos).getName());
+                }
+                setSkillsAdapter(mSkillsList);
+
+            } else {
+                showToast(response.body().getMessage());
+            }
+        } else {
+            showToast(R.string.server_error_msg);
+        }
+    }
+
+    @Override
+    public void onInterestsListSuccess(Response<GetAllInterestsResponse> response) {
+        if (response != null && response.body() != null) {
+            mInterestsList = new ArrayList<>();
+            if (response.body().getData() != null && response.body().getData().getInterestTypes() != null &&
+                    response.body().getData().getInterestTypes().size() > 0) {
+
+                for (int pos = 0; pos < response.body().getData().getInterestTypes().size(); pos++) {
+                    mInterestsList.add(response.body().getData().getInterestTypes().get(pos).getName());
+                }
+                setInterestsAdapter(mInterestsList);
+
+            } else {
+                showToast(response.body().getMessage());
+            }
+        } else {
+            showToast(R.string.server_error_msg);
+        }
+    }
+
+
+    @Override
+    public void getInterestsList(ArrayList<EditSkillsList> response) {
+
+    }
+
+    private void registerClickListener() {
+        mSaveImageView.setOnClickListener(this);
+        mAddImageView.setOnClickListener(this);
+        mSchoolSpinner.setOnItemSelectedListener(this);
+        mOccupSpinner.setOnItemSelectedListener(this);
+        findViewById(R.id.rl_add_image).setOnClickListener(this);
+        findViewById(R.id.iv_video_upload).setOnClickListener(this);
+        findViewById(R.id.iv_plus_interest).setOnClickListener(this);
+        findViewById(R.id.iv_plus_skills).setOnClickListener(this);
+        findViewById(R.id.iv_minus_interest).setOnClickListener(this);
+        findViewById(R.id.iv_minus_skills).setOnClickListener(this);
+
+    }
+
+    private void setDataOnUi(GetProfileResponse profileResponse) {
+        mSkillsList = new ArrayList<>();
+        mInterestsList = new ArrayList<>();
+        mSkillsSelectedList = new ArrayList<>();
+        if (profileResponse != null && profileResponse.getData() != null) {
+            GetProfileResponse.Data profileData = profileResponse.getData();
+            String userName = profileData.getUserName();
+            String schoolName = profileData.getSchoolName();
+            String userImage = profileData.getProfileImageUrl();
+            String compBio = profileData.getBio();
+
+            if (TextUtils.isEmpty(userName)) {    //set Username
+                mUserNameTextView.setText("");
+            } else {
+                mUserNameTextView.setText(userName);
+            }
+
+            if (!TextUtils.isEmpty(userImage)) {   //set user image
+                Glide.with(this).load(userImage).into(mAddImageView);
+            }
+
+            if (TextUtils.isEmpty(compBio)) {
+                mBioEditText.setText("");
+            } else {
+                mBioEditText.setText(compBio);
+            }
+
+//            ArrayList<GetProfileResponse.Skills> skillsList = profileData.getSkills();
+//            if (skillsList != null && skillsList.size() > 0) {
+//                for (int i = 0; i < skillsList.size(); i++) {
+//                    String nam = skillsList.get(i).getName();
+//                    if (!mSkillsList.contains(nam))
+//                        mSkillsList.add(nam);
+//                }
+//
+//                for (int i = 0; i < mSkillsList.size(); i++) {
+//                    EditProfileInput.Skills skills = new EditProfileInput().new Skills();
+//                    skills.setSelected(true);
+//                    skills.setName(mSkillsList.get(i));
+//                    mSkillsSelectedList.add(skills);
+//                }
+//                setSkillsAdapter(mSkillsSelectedList);
+//            }
+//            ArrayList<GetProfileResponse.Interest> interestList = profileData.getInterest();
+//            if (interestList != null && interestList.size() > 0) {
+//                for (int i = 0; i < interestList.size(); i++) {
+//                    String interName = interestList.get(i).getName();
+//                    mInterestsList.add(interName);
+//                }
+//                setInterestsAdapter(mInterestsList);
+//            }
+        }
+    }
+
+}
+*/

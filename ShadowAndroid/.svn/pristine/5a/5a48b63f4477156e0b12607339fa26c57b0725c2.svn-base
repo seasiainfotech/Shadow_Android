@@ -1,0 +1,53 @@
+package com.android.shadow.presenter;
+
+import android.text.TextUtils;
+
+import com.android.shadow.R;
+import com.android.shadow.api.AddressApi;
+import com.android.shadow.utils.Utilities;
+import com.android.shadow.views.core.BaseActivity;
+
+import org.json.JSONObject;
+
+/**
+ * This class is used to check  validations and check the location validation
+ * using {@link AddressApi} and then call the school api
+ *
+ * @author jindaldipanshu
+ * @version 1.0
+ */
+
+
+public class CompanyPresenter implements AddressApi.AddressValidator {
+    private BaseActivity mBaseActivity;
+    private CompanyCallback mCompanyCallback;
+
+    public CompanyPresenter(BaseActivity baseActivity, CompanyCallback companyCallback) {
+        mBaseActivity = baseActivity;
+        mCompanyCallback = companyCallback;
+    }
+
+    public interface CompanyCallback {
+        void onSuccess(String lat);
+    }
+
+    public void checkValidations(String name, String location) {
+        if (TextUtils.isEmpty(name)) {
+            return;
+        } else if (name.length() < 4) {
+            mBaseActivity.showToast("Please enter company name");
+        } else if (TextUtils.isEmpty(location)) {
+            return;
+        } else {
+            mCompanyCallback.onSuccess("");
+        }
+    }
+
+    @Override
+    public void onSuccess(JSONObject jsonObject) {
+        mCompanyCallback.onSuccess("");
+    }
+
+    private void checkResponse() {
+    }
+}

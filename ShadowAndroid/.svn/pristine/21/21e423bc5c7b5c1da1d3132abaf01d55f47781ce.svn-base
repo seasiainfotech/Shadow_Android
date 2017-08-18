@@ -1,0 +1,392 @@
+package com.android.shadow.views.search;
+
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.TextView;
+
+import com.android.shadow.R;
+import com.android.shadow.adapter.SearchAllTypeListAdapter;
+import com.android.shadow.adapter.SearchAllTypeLocationListAdapter;
+import com.android.shadow.adapter.SearchSimpleListAdapter;
+import com.android.shadow.dialog.SelectFilterDialog;
+import com.android.shadow.model.output.SearchAllTypeListResponse;
+import com.android.shadow.model.output.SearchLocationListResponse;
+import com.android.shadow.model.output.SearchSimpleResponse;
+import com.android.shadow.presenter.SearchPresenter;
+import com.android.shadow.utils.BundleKeys;
+import com.android.shadow.views.core.BaseActivity;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
+import java.util.ArrayList;
+
+import retrofit2.Response;
+
+public class SearchResultActivity extends BaseActivity implements View.OnClickListener,
+        SearchPresenter.SearchCallback, SearchView.OnQueryTextListener, SelectFilterDialog.DiistanceCallback
+         {
+
+    private ImageView mBackBtn, mThreeLineBtn, mThreeDotBtn;
+    private SearchView mSearchView;
+    private SearchPresenter searchPresenter;
+    private String mFilterSelected;
+    private Bundle mBundle = new Bundle();
+    private RecyclerView mSearchHorizontalListRecyclerView;
+    private SearchAllTypeListAdapter mSearchAllTypeListAdapter;
+    private SearchAllTypeLocationListAdapter mSearchLocationListAdapter;
+    //private static int NUM_PAGES = 5;
+    private ViewPager mPager;
+    private PagerAdapter mPagerAdapter;
+    private ScreenSlidePageFragment screenSliderFragment;
+    //private String mSearchDisplayMode = "1"; // 1 for list mode and 0 for viewpager mode
+    private PagerAdapter mPagerAdapter2, mPagerAdapter3;
+    private ArrayList<SearchLocationListResponse.Data> mLocationList;
+    private ArrayList<SearchAllTypeListResponse.Data> mAllList;
+    private ArrayList<SearchSimpleResponse.Data> mSimpleList;
+    private TextView mDistanceTextView;
+    private String mKeyword = "";
+    private SearchSimpleListAdapter mSearchSimpleListAdapter;
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_search_result;
+    }
+
+    @Override
+    protected void initViews() {
+        searchPresenter = new SearchPresenter(this, this);
+        mBundle = getIntent().getExtras();
+        mPager = (ViewPager) findViewById(R.id.pager);
+
+        mFilterSelected = mBundle.getString(BundleKeys.BUNDLE_FILTER_SELECTED);
+        mSearchHorizontalListRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_search_results);
+
+        mBackBtn = (ImageView) findViewById(R.id.image_view_back);
+        mSearchView = (SearchView) findViewById(R.id.search_view_search_activity);
+        mSearchView.setOnClickListener(this);
+        mSearchView.setOnQueryTextListener(this);
+
+        mThreeDotBtn = (ImageView) findViewById(R.id.Image_view_three_dot);
+        mThreeLineBtn = (ImageView) findViewById(R.id.Image_view_menu);
+
+        mDistanceTextView = (TextView) findViewById(R.id.text_view_select_distance);
+        mDistanceTextView.setOnClickListener(this);
+
+        mBackBtn.setOnClickListener(this);
+        mThreeLineBtn.setOnClickListener(this);
+        mThreeDotBtn.setOnClickListener(this);
+
+        if (mFilterSelected.equals("location")) {
+            mDistanceTextView.setVisibility(View.VISIBLE);
+        }
+        hitServiceGetAllTypeByType();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    public void hitServiceGetAllTypeByType() {
+        if (mFilterSelected.equals("location")) {
+            searchPresenter.checkValidationsLocationList("", "100000000000000");
+        } else if (mFilterSelected.equals("school")) {
+            searchPresenter.checkValidationsAllTypeList("", "School");
+        } else if (mFilterSelected.equals("trends")) {
+            searchPresenter.checkValidationsAllTypeList("", "Trends");
+        } else if (mFilterSelected.equals("company")) {
+            searchPresenter.checkValidationsAllTypeList("", "Company");
+        } else if (mFilterSelected.equals("simple")) {
+            searchPresenter.checkValidationsSimpleSearchList("");
+        }
+    }
+
+    public void setSearchAllTypeWithLocationListAdapter(ArrayList<SearchLocationListResponse.Data> mList) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mSearchHorizontalListRecyclerView.setLayoutManager(linearLayoutManager);
+        mSearchLocationListAdapter = new SearchAllTypeLocationListAdapter(this, mList);
+        mSearchHorizontalListRecyclerView.setAdapter(mSearchLocationListAdapter);
+    }
+
+    public void setSearchAllTypeListAdapter(ArrayList<SearchAllTypeListResponse.Data> mList) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mSearchHorizontalListRecyclerView.setLayoutManager(linearLayoutManager);
+        mSearchAllTypeListAdapter = new SearchAllTypeListAdapter(this, mList);
+        mSearchHorizontalListRecyclerView.setAdapter(mSearchAllTypeListAdapter);
+    }
+
+    public void setSearchSimpleListAdapter(ArrayList<SearchSimpleResponse.Data> mList) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mSearchHorizontalListRecyclerView.setLayoutManager(linearLayoutManager);
+        mSearchSimpleListAdapter = new SearchSimpleListAdapter(this, mList);
+        mSearchHorizontalListRecyclerView.setAdapter(mSearchSimpleListAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+//        if (mPager.getCurrentItem() == 0) {
+//            // If the user is currently looking at the first step, allow the system to handle the
+//            // Back button. This calls finish() on this activity and pops the back stack.
+//            super.onBackPressed();
+//        } else {
+//            // Otherwise, select the previous step.
+//            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+//        }
+    }
+
+    @Override
+    public void dispose() {
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.image_view_back:
+                finish();
+                break;
+            case R.id.Image_view_three_dot:
+                //mSearchDisplayMode = "0";// 0 for slide viewpager mode
+                //hitServiceGetAllTypeByType();
+                //mThreeLineBtn.setImageTintList();
+
+                try{
+                    mThreeLineBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.three_dot_gray)));
+                    mThreeDotBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+                }catch (Exception e){
+
+                }
+
+
+
+                mPager.setVisibility(View.VISIBLE);
+                mSearchHorizontalListRecyclerView.setVisibility(View.GONE);
+                if (mFilterSelected.equals("location") && mLocationList != null) {
+                    mPagerAdapter2 = new ScreenSlideLocationPagerAdapter(getSupportFragmentManager(), mLocationList);
+                    mPager.setAdapter(mPagerAdapter2);
+                } else if (mFilterSelected.equals("simple") && mSimpleList != null) {
+                    mPagerAdapter3 = new ScreenSlideSimpleListPagerAdapter(getSupportFragmentManager(), mSimpleList);
+                    mPager.setAdapter(mPagerAdapter3);
+                } else if (mAllList != null) {
+                    mPagerAdapter = new ScreenSlideAllTypePagerAdapter(getSupportFragmentManager(), mAllList);
+                    mPager.setAdapter(mPagerAdapter);
+                }
+                break;
+            case R.id.Image_view_menu:
+                //mSearchDisplayMode = "1";
+                //hitServiceGetAllTypeByType();
+
+                try{
+                    mThreeLineBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+                    mThreeDotBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.three_dot_gray)));
+                }catch (Exception e){
+
+                }
+
+
+                mPager.setVisibility(View.GONE);
+                mSearchHorizontalListRecyclerView.setVisibility(View.VISIBLE);
+                if (mFilterSelected.equals("location") && mLocationList != null) {
+                    setSearchAllTypeWithLocationListAdapter(mLocationList);
+                } else if (mFilterSelected.equals("simple") && mSimpleList != null) {
+                    setSearchSimpleListAdapter(mSimpleList);
+                } else if (mAllList != null) {
+                    setSearchAllTypeListAdapter(mAllList);
+                }
+                break;
+
+            case R.id.text_view_select_distance:
+                SelectFilterDialog selectFilterDialog = new SelectFilterDialog(this, this);
+                selectFilterDialog.ShowFilterDialog();
+                break;
+
+            case R.id.search_view_search_activity:
+                mSearchView.setIconified(false);
+                break;
+        }
+    }
+
+
+    @Override
+    public void onSearchNoData() {
+        showToast("No data found");
+        if (mFilterSelected.equals("location")) {
+            mLocationList = new ArrayList<>();
+            setSearchAllTypeWithLocationListAdapter(mLocationList);
+            mPagerAdapter2 = new ScreenSlideLocationPagerAdapter(getSupportFragmentManager(), mLocationList);
+            mPager.setAdapter(mPagerAdapter2);
+        } else if (mFilterSelected.equals("simple")) {
+            mSimpleList = new ArrayList<>();
+            setSearchSimpleListAdapter(mSimpleList);
+            mPagerAdapter3 = new ScreenSlideSimpleListPagerAdapter(getSupportFragmentManager(), mSimpleList);
+            mPager.setAdapter(mPagerAdapter3);
+        } else {
+            mAllList = new ArrayList<>();
+            setSearchAllTypeListAdapter(mAllList);
+            mPagerAdapter = new ScreenSlideAllTypePagerAdapter(getSupportFragmentManager(), mAllList);
+            mPager.setAdapter(mPagerAdapter);
+        }
+    }
+
+    @Override
+    public void onSearchLocationListSuccess(Response<SearchLocationListResponse> response) {
+        mLocationList = response.body().getData();
+        if (mPager.getVisibility() == View.GONE) {
+            setSearchAllTypeWithLocationListAdapter(mLocationList);
+        } else if (mPager.getVisibility() == View.VISIBLE) {
+            mPagerAdapter2 = new ScreenSlideLocationPagerAdapter(getSupportFragmentManager(), mLocationList);
+            mPager.setAdapter(mPagerAdapter2);
+        }
+    }
+
+    @Override
+    public void onSearchAllTypeListSuccess(Response<SearchAllTypeListResponse> response) {
+
+
+        mAllList = response.body().getData();
+        if (mPager.getVisibility() == View.GONE) {
+            setSearchAllTypeListAdapter(mAllList);
+        } else if (mPager.getVisibility() == View.VISIBLE) {
+            mPagerAdapter = new ScreenSlideAllTypePagerAdapter(getSupportFragmentManager(), mAllList);
+            mPager.setAdapter(mPagerAdapter);
+        }
+    }
+
+    @Override
+    public void onSearchSimpleListSuccess(Response<SearchSimpleResponse> response) {
+        mSimpleList = response.body().getData();
+        if (mPager.getVisibility() == View.GONE) {
+            setSearchSimpleListAdapter(mSimpleList);
+        } else if (mPager.getVisibility() == View.VISIBLE) {
+            mPagerAdapter3 = new ScreenSlideSimpleListPagerAdapter(getSupportFragmentManager(), mSimpleList);
+            mPager.setAdapter(mPagerAdapter3);
+        }
+    }
+
+    @Override
+    public void getDistanceSelected(String distance) {
+        mDistanceTextView.setText(distance + "m");
+        //showToast("distance----" + distance);
+        searchPresenter.checkValidationsLocationList(mKeyword, distance);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String keyword) {
+        mKeyword = keyword;
+        int length = keyword.length();
+        if (length >= 3 || length == 0) {
+            if (mFilterSelected.equals("location")) {
+                searchPresenter.checkValidationsLocationList(keyword, "10000000000000000000");
+            } else if (mFilterSelected.equals("school")) {
+                searchPresenter.checkValidationsAllTypeList(keyword, "School");
+            } else if (mFilterSelected.equals("trends")) {
+                searchPresenter.checkValidationsAllTypeList(keyword, "Trends");
+            } else if (mFilterSelected.equals("company")) {
+                searchPresenter.checkValidationsAllTypeList(keyword, "Company");
+            } else if (mFilterSelected.equals("simple")) {
+                searchPresenter.checkValidationsSimpleSearchList(keyword);
+            }
+        }
+        return false;
+    }
+
+
+    private class ScreenSlideAllTypePagerAdapter extends FragmentStatePagerAdapter {
+        private final ArrayList<SearchAllTypeListResponse.Data> dataList;
+
+        public ScreenSlideAllTypePagerAdapter(FragmentManager fm, ArrayList<SearchAllTypeListResponse.Data> data) {
+            super(fm);
+            this.dataList = data;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            screenSliderFragment = new ScreenSlidePageFragment(dataList, position, mFilterSelected, "all_type");
+            return screenSliderFragment;
+        }
+
+        @Override
+        public int getCount() {
+            return dataList.size();
+        }
+    }
+
+    private class ScreenSlideLocationPagerAdapter extends FragmentStatePagerAdapter {
+        private final ArrayList<SearchLocationListResponse.Data> dataList;
+
+        public ScreenSlideLocationPagerAdapter(FragmentManager fm, ArrayList<SearchLocationListResponse.Data> data) {
+            super(fm);
+            this.dataList = data;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            screenSliderFragment = new ScreenSlidePageFragment(dataList, position, "location");
+            return screenSliderFragment;
+        }
+
+        @Override
+        public int getCount() {
+            return dataList.size();
+        }
+    }
+
+    private class ScreenSlideSimpleListPagerAdapter extends FragmentStatePagerAdapter {
+        private final ArrayList<SearchSimpleResponse.Data> dataList;
+
+        public ScreenSlideSimpleListPagerAdapter(FragmentManager fm, ArrayList<SearchSimpleResponse.Data> data) {
+            super(fm);
+            this.dataList = data;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            screenSliderFragment = new ScreenSlidePageFragment(dataList, position, mFilterSelected, "simple", "");
+            return screenSliderFragment;
+        }
+
+        @Override
+        public int getCount() {
+            return dataList.size();
+        }
+    }
+
+
+
+}

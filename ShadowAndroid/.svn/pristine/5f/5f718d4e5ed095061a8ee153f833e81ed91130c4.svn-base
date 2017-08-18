@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+>
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/search_view_occupations"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round_gray_border"
+        android:queryHint="Search"
+
+        android:layout_marginRight="20dp"
+        android:layout_alignStart="@+id/recycler_view_skills_added"
+        android:layout_alignLeft="@+id/recycler_view_skills_added">
+
+    </android.support.v7.widget.SearchView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_skills_added"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@+id/search_view_occupations"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/round_purple_border">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_skills_to_add"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@+id/recycler_view_skills_added"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/round_purple_border">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/button_done_skills"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/recycler_view_skills_to_add"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/round_purple_border"
+        android:text="Done" />
+
+</RelativeLayout>

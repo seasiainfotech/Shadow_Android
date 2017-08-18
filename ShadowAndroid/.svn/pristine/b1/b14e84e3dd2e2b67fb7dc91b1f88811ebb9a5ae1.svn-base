@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.android.shadow.views.dashboard.DashboardActivity"
+    android:background="@android:color/white"
+    >
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        >
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true"
+            ></View>
+        <ImageView
+            android:id="@+id/image_view_search"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_search_gray"
+            android:layout_toLeftOf="@+id/view"
+            android:layout_marginRight="3dp"
+
+            />
+        <View
+            android:id="@+id/view_search"
+            android:layout_width="40dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/image_view_search"
+            android:layout_toLeftOf="@+id/view"
+            android:background="@android:color/black"
+            android:layout_marginTop="10dp"
+            ></View>
+
+        <ImageView
+            android:id="@+id/image_view_profile"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/profile_purple"
+            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@+id/image_view_search"
+            android:layout_marginLeft="17dp"
+
+            />
+        <View
+            android:id="@+id/view_profile"
+            android:layout_width="40dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/image_view_search"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/image_view_search"
+            android:layout_marginLeft="15dp"
+            android:background="@android:color/black"
+            ></View>
+
+    </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rl_bottom"
+        ></FrameLayout>
+
+</RelativeLayout>

@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">Shadow</string>
+    <string name="please_wait_meassge">Please wait..</string>
+    <string name="empty_username_error_msg">Please enter valid username</string>
+    <string name="no_internet_msg">No internet connection.</string>
+    <string name="enter_phone">Enter Your Phone Number</string>
+    <string name="no_data_found_msg">No data found.</string>
+    <string name="server_error_msg">Server error.Please try again.</string>
+    <string name="crash_toast_text">Ooooops ! I crashed, but a report has been sent to my developer to help fix the issue !</string>
+    <string name="crash_dialog_title">Shadow has crashed</string>
+    <string name="crash_dialog_text">An unexpected error occurred forcing the
+    application to stop. Please help us fix this by sending us error data,
+    all you have to do is click OK.</string>
+    <string name="crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
+    <string name="crash_dialog_ok_toast">Thank you !</string>
+
+    <string name="user_name_error">Username need to be over 6 character long  </string>
+    <string name="invalid_pass_error">Password should be between 6 and 15 characters</string>
+
+    <string name="invalid_first_name">Please enter first name</string>
+    <string name="invalid_last_name">Please enter last name</string>
+    <string name="create_username">Hi! Create  a username</string>
+    <string name="create_password">Hi! Create a password</string>
+    <string name="user_first_last"><![CDATA[What is your first & last  name?]]></string>
+    <string name="school_selection"><![CDATA[What is the name & location of the school?]]></string>
+    <string name="comp_selection"><![CDATA[What is the name & location of the company?]]></string>
+    <string name="address_error_msg">Invalid address</string>
+    <string name="coming_soon">Coming Soon</string>
+    <string name="via_email">via Email</string>
+    <string name="via_number">via Number</string>
+    <string name="dialog_verify_pass_title_name">Choose option to reset your password?</string>
+    <string name="dialog_verify_otp_title_name">Choose option to validate your account </string>
+
+    <string name="intro_message">
+        <![CDATA[
+   This sample uses the PlaceAutocomplete Activity from the Places API for Android to open
+            a fullscreen autocomplete widget when the button is pressed.
+    ]]>
+    </string>
+    <string name="place_details">
+    <![CDATA[
+        <b>%1$s</b>
+        <br/>
+        <i>Place Id: %2$s</i>
+        <br/>
+        Address: %3$s
+        <br/>
+        Phone: %4$s
+        <br/>
+        Website: %5$s
+    ]]>
+    </string>
+    <string name="custom_digits">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^*()_+-={}.[]|:;/?\</string>
+
+    <string name="tooltip_user">To register as a user "User" means, the user will have the option to shadow or be shadowed by other user(s) on the platform</string>
+    <string name="tooltip_school">To register as a "School" a valid representor of the establishment is needed to verified the school account. A shadow team member will be reaching out post registration to confirm registration</string>
+    <string name="tooltip_compnay">To register as a "Company" a valid representor of the establishment is needed to verified the Company account. A shadow team member will be reaching out post registration to confirm registration</string>
+    <string name="bio_hint">write something....</string>
+
+</resources>

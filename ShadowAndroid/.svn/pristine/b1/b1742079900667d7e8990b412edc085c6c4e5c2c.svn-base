@@ -1,0 +1,333 @@
+package com.android.shadow.views.core;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+
+import com.android.shadow.R;
+import com.android.shadow.interfaces.Core;
+import com.android.shadow.interfaces.Disposable;
+import com.android.shadow.utils.ProgressUtility;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
+import java.util.ArrayList;
+
+
+/**
+ * This class is used to
+ * To initialize Toolbar,views and set ToolBar title
+ *
+ * @author jindaldipanshu
+ * @version 1.0
+ */
+
+public abstract class BaseActivity extends AppCompatActivity implements Disposable, Core,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+
+    public static String APP_NUMBER="1";
+    public static String APP_BUILD_NUMBER="1.0";
+
+    public TextView mTitleTextView;
+
+    public BaseActivity baseActivity;
+    public Bundle mSavedInstanceState;
+    private static final LocationRequest REQUEST = LocationRequest.create()
+            .setInterval(1000)
+            .setFastestInterval(500)
+            .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+    private Runnable onFusedLocationProviderTimeout;
+    private Handler handler = new Handler();
+    private GoogleApiClient mGoogleApiClient;
+    public double longitude, latitude;
+
+    private Fragment currentFragment;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        getWindow().setBackgroundDrawable(null);
+        super.onCreate(savedInstanceState);
+        setContentView(getLayoutId());
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        mSavedInstanceState = savedInstanceState;
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        onCreate();
+        baseActivity = this;
+    }
+
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        dispose();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+        dispose();
+    }
+
+    @Override
+    public void showDialog() {
+        try {
+            if (!isFinishing())
+                ProgressUtility.showProgress(this, getString(R.string.please_wait_meassge));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void hideDialog() {
+        ProgressUtility.dismissProgress();
+    }
+
+
+
+    protected void onCreate() {
+        initViews();
+    }
+
+    @Override
+    public void showToast(int resId) {
+        Toast.makeText(getApplicationContext(), getResources().getString(resId), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public String getStringValue(int resId) {
+        return getResources().getString(resId);
+    }
+
+    /**
+     * To get Layout
+     *
+     * @return integer
+     */
+    protected abstract int getLayoutId();
+
+    /**
+     * To initialize Views
+     */
+    protected abstract void initViews();
+
+
+    /**
+     * @return toolbar title name
+     */
+    //  protected abstract String getHeaderTitle();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * To get android phone id
+     *
+     * @return String
+     */
+    public String getDeviceId() {
+        String deviceId = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        return deviceId;
+    }
+
+    /**
+     * This method is used to replace fragment .
+     *
+     * @param newFragment :replace an existing fragment with new fragment.
+     * @param args        :pass bundle data fron one fragment to another fragment
+     */
+    public void replaceFragment( Fragment newFragment, Bundle args) {
+        FragmentManager manager = getSupportFragmentManager();
+        manager.popBackStack();
+        if (args != null)
+            newFragment.setArguments(args);
+        FragmentTransaction transaction = manager.beginTransaction();
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        transaction.replace(R.id.frame_layout, newFragment);
+
+        transaction.addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
+    }
+
+
+    /**
+     * This method is used to set toolbar header title
+     *
+     * @param title:title of tool bar
+     */
+    public void setHeaderTitle(String title) {
+       // mTitleTextView = (TextView) findViewById(R.id.tool_bar_title);
+        mTitleTextView.setText(title);
+    }
+
+
+    public void setAdapter(RecyclerView recyclerView, ArrayList<?> mList) {
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+    }
+
+
+    /**
+     * This method is used to get string value from strings file
+     *
+     * @param resId :resource id
+     * @return string
+     */
+    public String getStringMessage(int resId) {
+        return getResources().getString(resId);
+    }
+
+    /**
+     * This method is used to get string value from strings file
+     *
+     * @param resId :resource id
+     * @return string
+     */
+    public Drawable getDrawableRes(int resId) {
+        return getResources().getDrawable(resId);
+    }
+
+
+
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Location lastbestStaleLocation = getLastBestStaleLocation();
+        //sendLocationUsingBroadCast(lastbestStaleLocation);
+        if (lastbestStaleLocation != null) {
+            latitude = lastbestStaleLocation.getLatitude();
+            longitude = lastbestStaleLocation.getLongitude();
+        }
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, REQUEST, this);
+        //mLocationClient.requestLocationUpdates(REQUEST,this);
+        onFusedLocationProviderTimeout = new Runnable() {
+            public void run() {
+                Log.d("FusedLocationService", "location Timeout");
+                Location lastbestStaleLocation = getLastBestStaleLocation();
+                //sendLocationUsingBroadCast(lastbestStaleLocation);
+                if (lastbestStaleLocation != null) {
+                    latitude = lastbestStaleLocation.getLatitude();
+                    longitude = lastbestStaleLocation.getLongitude();
+                    //TODO
+                    // save lat and liong in sharedp
+                    //   SharedPrefsHelper sharedPrefsHelper = new SharedPrefsHelper(BaseActivity.this);
+                    // sharedPrefsHelper.save(PreferenceKeys.LATITUDE, latitude);
+                    // sharedPrefsHelper.save(PreferenceKeys.LONGITUDE, longitude);
+                }
+            }
+        };
+        handler.postDelayed(onFusedLocationProviderTimeout, 20000);//20 sec
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    public Location getLastBestStaleLocation() {
+        Location bestResult = null;
+        LocationManager locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //Location lastFusedLocation=mLocationClient.getLastLocation();
+        Location lastFusedLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Location gpsLocation = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location networkLocation = locMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (lastFusedLocation != null) {
+            bestResult = lastFusedLocation;
+        }
+
+        if (gpsLocation != null && networkLocation != null) {
+            if (gpsLocation.getTime() > networkLocation.getTime())
+                bestResult = gpsLocation;
+        } else if (gpsLocation != null) {
+            bestResult = gpsLocation;
+        } else if (networkLocation != null) {
+            bestResult = networkLocation;
+        }
+
+        //take Fused Location in to consideration while checking for last stale location
+        if (bestResult != null && lastFusedLocation != null) {
+            if (bestResult.getTime() < lastFusedLocation.getTime())
+                bestResult = lastFusedLocation;
+        }
+
+        return bestResult;
+    }
+
+
+    public Fragment getCurrentFragment() {
+        return currentFragment;
+    }
+
+    public void setCurrentFragment(Fragment currentFragment) {
+        this.currentFragment = currentFragment;
+    }
+}

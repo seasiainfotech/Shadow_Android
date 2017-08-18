@@ -1,0 +1,148 @@
+package com.android.shadow.views.search;
+
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.SearchView;
+
+import com.android.shadow.R;
+import com.android.shadow.utils.BundleKeys;
+import com.android.shadow.views.core.BaseFragment;
+
+/**
+ * Created by jindaldipanshu on 5/30/2017.
+ */
+
+public class SearchFragment extends BaseFragment implements View.OnClickListener {
+    private ImageView mBackBtn;
+    private SearchView mSearchView;
+    private ImageView mLocationFilter, mSchoolFilter, mTrendsFilter, mCompanyFilter;
+    Bundle bundleIntentType;
+
+    @Override
+    public void dispose() {
+
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_search;
+    }
+
+    @Override
+    protected void initViews(View view) {
+        //mBackBtn = (ImageView) view.findViewById(R.id.image_view_back);
+        mSearchView = (SearchView) view.findViewById(R.id.search_view_search_fragment);
+        // mOccupationFilter = (ImageView) view.findViewById(R.id.search_view_occupation);
+        mCompanyFilter = (ImageView) view.findViewById(R.id.search_view_company);
+        mLocationFilter = (ImageView) view.findViewById(R.id.search_view_location);
+        mSchoolFilter = (ImageView) view.findViewById(R.id.search_view_school);
+        mTrendsFilter = (ImageView) view.findViewById(R.id.search_view_trends);
+
+
+        //mBackBtn.setOnClickListener(this);
+        mSearchView.setOnClickListener(this);
+        mSearchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundleIntentType = new Bundle();
+                bundleIntentType.putString(BundleKeys.BUNDLE_FILTER_SELECTED, "simple");
+                Intent intentAll = new Intent(getBaseActivity(), SearchResultActivity.class);
+                intentAll.putExtras(bundleIntentType);
+                startActivity(intentAll);
+            }
+        });
+        mCompanyFilter.setOnClickListener(this);
+        mLocationFilter.setOnClickListener(this);
+        mSchoolFilter.setOnClickListener(this);
+        mTrendsFilter.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+            case R.id.search_view_search_fragment:
+                bundleIntentType = new Bundle();
+                bundleIntentType.putString(BundleKeys.BUNDLE_FILTER_SELECTED, "simple");
+                Intent intentAll = new Intent(getBaseActivity(), SearchResultActivity.class);
+                intentAll.putExtras(bundleIntentType);
+                startActivity(intentAll);
+                break;
+
+            case R.id.search_view_company:
+                bundleIntentType = new Bundle();
+                bundleIntentType.putString(BundleKeys.BUNDLE_FILTER_SELECTED, "company");
+                Intent intentCompany = new Intent(getBaseActivity(), SearchResultActivity.class);
+                intentCompany.putExtras(bundleIntentType);
+                startActivity(intentCompany);
+                break;
+
+            case R.id.search_view_location:
+                if (!gpsEnable()) {
+                    return;
+                }
+
+                bundleIntentType = new Bundle();
+                bundleIntentType.putString(BundleKeys.BUNDLE_FILTER_SELECTED, "location");
+                Intent intentLocation = new Intent(getBaseActivity(), SearchResultActivity.class);
+                intentLocation.putExtras(bundleIntentType);
+                startActivity(intentLocation);
+                break;
+
+            case R.id.search_view_school:
+                bundleIntentType = new Bundle();
+                bundleIntentType.putString(BundleKeys.BUNDLE_FILTER_SELECTED, "school");
+                Intent intentSchool = new Intent(getBaseActivity(), SearchResultActivity.class);
+                intentSchool.putExtras(bundleIntentType);
+                startActivity(intentSchool);
+                break;
+
+            case R.id.search_view_trends:
+                bundleIntentType = new Bundle();
+                bundleIntentType.putString(BundleKeys.BUNDLE_FILTER_SELECTED, "trends");
+                Intent intentTrends = new Intent(getBaseActivity(), SearchResultActivity.class);
+                intentTrends.putExtras(bundleIntentType);
+                startActivity(intentTrends);
+                break;
+
+        }
+    }
+
+
+    public boolean gpsEnable() {
+        final LocationManager manager = (LocationManager) getBaseActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    protected void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getBaseActivity());
+        builder.setMessage("Your GPS seems to be disabled, you need to enable your gps")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
+}

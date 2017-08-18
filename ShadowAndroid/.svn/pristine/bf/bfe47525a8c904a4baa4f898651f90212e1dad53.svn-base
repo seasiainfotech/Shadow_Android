@@ -1,0 +1,145 @@
+package com.android.shadow.views.dashboard;
+
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+import com.android.shadow.R;
+import com.android.shadow.model.output.GetProfileResponse;
+import com.android.shadow.utils.BundleKeys;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.views.profile.ProfileBaseFragment;
+import com.android.shadow.views.profile.editprofile.EditProfileUserActivity;
+import com.android.shadow.views.search.SearchFragment;
+import com.android.shadow.views.search.SearchResultActivity;
+
+public class MainActivity extends DasdboardBaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+
+
+    private ImageView mShadowIcon;
+    private LinearLayout mRatingLayout;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void initViews() {
+        super.initViews();
+        //mBlogImageView.setOnClickListener(this);
+
+        mRatingLayout = (LinearLayout) toolbar.findViewById(R.id.ll_rating);
+        mRatingLayout.setOnClickListener(this);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+        mProfileImageView.setOnClickListener(this);
+        mSearchImageView.setOnClickListener(this);
+        mProfileView.setOnClickListener(this);
+        mSearchView.setOnClickListener(this);
+
+        toolbar.findViewById(R.id.search_view_search_fragment).setOnClickListener(this);
+        replaceProfileFragment();
+        String userID = mSharedPrefsHelper.get(PreferenceKeys.PREF_USER_ID);
+        Log.e("userID-------", userID);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+            finish();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+
+        if (id == R.id.search_view_search_fragment) {
+
+            Bundle bundleIntentType = new Bundle();
+            bundleIntentType.putString(BundleKeys.BUNDLE_FILTER_SELECTED, "simple");
+            Intent intentAll = new Intent(this, SearchResultActivity.class);
+            intentAll.putExtras(bundleIntentType);
+            startActivity(intentAll);
+
+        } else if (id == R.id.ll_rating) {
+
+        } else if (id == R.id.image_view_profile || id == R.id.view_profile) {
+            mRatingRl.setVisibility(View.VISIBLE);
+            mSearchRl.setVisibility(View.GONE);
+            replaceProfileFragment();
+            mProfileImageView.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.profile_purple));
+            mSearchImageView.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_search_gray));
+
+        } else if (id == R.id.image_view_search || id == R.id.view_search) {
+            mRatingRl.setVisibility(View.GONE);
+            mSearchRl.setVisibility(View.VISIBLE);
+            replaceFragment(new SearchFragment(), null);
+            mProfileImageView.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.profile_gray));
+            mSearchImageView.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_search_purple));
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_shadow_me) {
+            // Handle the camera action
+            showToast("Coming Soon");
+
+        } else if (id == R.id.nav_edit_profile) {
+            if (getCurrentFragment() instanceof ProfileBaseFragment) {
+                GetProfileResponse profileResponse = ((ProfileBaseFragment) getCurrentFragment()).profileResponse;
+                if (profileResponse != null && profileResponse.getData() != null) {
+                    Intent intent = new Intent(this, EditProfileUserActivity.class);
+                    intent.putExtra("profile_response", profileResponse);
+                    startActivity(intent);
+                }
+            }
+        } else if (id == R.id.nav_help) {
+            showToast("Coming Soon");
+
+        } else if (id == R.id.nav_logout) {
+            showLogoutConfirmPopup();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+
+}

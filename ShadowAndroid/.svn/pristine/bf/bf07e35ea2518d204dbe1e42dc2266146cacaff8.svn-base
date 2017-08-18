@@ -1,0 +1,352 @@
+package com.android.shadow.views.profile;
+
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.shadow.R;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.model.SocialMedia;
+import com.android.shadow.model.input.GetProfileInput;
+import com.android.shadow.model.output.GetProfileResponse;
+import com.android.shadow.model.output.LogoutResponse;
+import com.android.shadow.presenter.ProfilePresenter;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.utils.SharedPrefsHelper;
+import com.android.shadow.utils.Utilities;
+import com.android.shadow.views.ExpandableHeightGridView;
+import com.android.shadow.views.auth.LoginActivity;
+import com.android.shadow.views.core.BaseFragment;
+
+import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.FACEBOOK_KEY;
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.GITHUB_KEY;
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.GOOGLE_PLUS_KEY;
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.INSTAGRAM_KEY;
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.LINKEDIN_KEY;
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.TWITTER_KEY;
+
+
+/**
+ * Created by jindaldipanshu on 7/4/2017.
+ */
+
+public class ProfileBaseFragment extends BaseFragment {
+    protected ExpandableHeightGridView mOccupationsGridView;
+    protected ImageView mNotificationImageView, mMessageImageView, mRequestImageView, mVideoImageView, mSettingsImageView, mEditImageView;
+    protected ImageView mStar1ImgVw, mStar2ImgVw, mStar3ImgVw, mStar4ImgVw, mStar5ImgVw, mUrl1ImageView, mUrl2ImageView, mUrl3ImageView;
+    protected CircleImageView mUserImagView;
+    protected TextView mFollowing, mFollowers, mBioTextView, mUserNameTextView, mSchoolNmTextView, mCompNmTextView;
+
+    protected ProfilePresenter mProfilePresenter;
+    protected SharedPrefsHelper sharedPrefsHelper;
+    protected String mUserid;
+
+    protected GetProfileResponse profileResponse;
+    protected ArrayList<SocialMedia.Media> mSelectedMediaList;
+
+    protected ArrayList<GetProfileResponse.Occupations> mOccupationsList;
+    private AlertDialog logoutDialog;
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void initViews(View view) {
+        sharedPrefsHelper = new SharedPrefsHelper(getActivity());
+        mUserid = sharedPrefsHelper.get(PreferenceKeys.PREF_USER_ID);
+
+        mSettingsImageView = (ImageView) view.findViewById(R.id.iv_settings);
+        mEditImageView = (ImageView) view.findViewById(R.id.iv_edit);
+
+        mNotificationImageView = (ImageView) view.findViewById(R.id.iv_notification);
+        mMessageImageView = (ImageView) view.findViewById(R.id.iv_message);
+        mRequestImageView = (ImageView) view.findViewById(R.id.iv_request);
+        mUserImagView = (CircleImageView) view.findViewById(R.id.iv_user_profile);
+        mVideoImageView = (ImageView) view.findViewById(R.id.iv_video);
+
+        mStar1ImgVw = (ImageView) view.findViewById(R.id.iv_star1);
+        mStar2ImgVw = (ImageView) view.findViewById(R.id.iv_star2);
+        mStar3ImgVw = (ImageView) view.findViewById(R.id.iv_star3);
+        mStar4ImgVw = (ImageView) view.findViewById(R.id.iv_star4);
+        mStar5ImgVw = (ImageView) findViewById(R.id.iv_star5);
+
+        mFollowing = (TextView) view.findViewById(R.id.tv_following);
+        mFollowers = (TextView) view.findViewById(R.id.tv_followers);
+        mBioTextView = (TextView) view.findViewById(R.id.text_view_bio);
+        mUrl1ImageView = (ImageView) view.findViewById(R.id.iv_url1);
+        mUrl2ImageView = (ImageView) view.findViewById(R.id.iv_url2);
+        mUrl3ImageView = (ImageView) view.findViewById(R.id.iv_url3);
+        mUrl1ImageView.setVisibility(View.GONE);
+        mUrl2ImageView.setVisibility(View.GONE);
+        mUrl3ImageView.setVisibility(View.GONE);
+        mOccupationsGridView = (ExpandableHeightGridView) view.findViewById(R.id.grid_view_occupations);
+        mOccupationsGridView.setExpanded(true);
+
+    }
+
+    @Override
+    public void dispose() {
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    protected void setRating(int rating) {
+        switch (rating) {
+            case 1:
+                mStar1ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar3ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar4ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar5ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_grey));
+                break;
+            case 2:
+                mStar1ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar4ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar5ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_grey));
+                break;
+            case 3:
+                mStar1ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar4ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar5ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_grey));
+                break;
+            case 4:
+                mStar1ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar4ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar5ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_grey));
+                break;
+            case 5:
+                mStar1ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar4ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar5ImgVw.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_star_yellow));
+                break;
+        }
+    }
+
+    protected void addSocialData(GetProfileResponse response) {
+        if (response != null) {
+            mSelectedMediaList = new ArrayList<>();
+            if (profileResponse != null && profileResponse.getData() != null) {
+                GetProfileResponse.Data profileData = profileResponse.getData();
+                String linkedinUrl = profileData.getLinkedInUrl();
+                String facebookUrl = profileData.getFacebookUrl();
+                String githubUrl = profileData.getGitHubUrl();
+                String twitterUrl = profileData.getTwitterUrl();
+                String instagramUrl = profileData.getInstagramUrl();
+                String googlePlusUrl = profileData.getGooglePlusUrl();
+                if (!TextUtils.isEmpty(linkedinUrl)) {
+                    SocialMedia.Media media = new SocialMedia().new Media();
+                    media.setId(LINKEDIN_KEY);
+                    media.setName("Linkedin");
+                    media.setUrl(linkedinUrl);
+                    mSelectedMediaList.add(media);
+                }
+                if (!TextUtils.isEmpty(facebookUrl)) {
+                    SocialMedia.Media media = new SocialMedia().new Media();
+                    media.setId(FACEBOOK_KEY);
+                    media.setName("Facebook");
+                    media.setUrl(facebookUrl);
+                    mSelectedMediaList.add(media);
+                }
+                if (!TextUtils.isEmpty(githubUrl)) {
+                    SocialMedia.Media media = new SocialMedia().new Media();
+                    media.setId(GITHUB_KEY);
+                    media.setName("Github");
+                    media.setUrl(githubUrl);
+                    mSelectedMediaList.add(media);
+                }
+                if (!TextUtils.isEmpty(twitterUrl)) {
+                    SocialMedia.Media media = new SocialMedia().new Media();
+                    media.setId(TWITTER_KEY);
+                    media.setName("Twitter");
+                    media.setUrl(twitterUrl);
+                    mSelectedMediaList.add(media);
+                }
+                if (!TextUtils.isEmpty(instagramUrl)) {
+                    SocialMedia.Media media = new SocialMedia().new Media();
+                    media.setId(INSTAGRAM_KEY);
+                    media.setName("Instagram");
+                    media.setUrl(instagramUrl);
+                    mSelectedMediaList.add(media);
+
+                }
+                if (!TextUtils.isEmpty(googlePlusUrl)) {
+                    SocialMedia.Media media = new SocialMedia().new Media();
+                    media.setId(GOOGLE_PLUS_KEY);
+                    media.setName("Google+");
+                    media.setUrl(googlePlusUrl);
+                    mSelectedMediaList.add(media);
+                }
+                if (mSelectedMediaList != null && mSelectedMediaList.size() > 0) {
+                    setMediaListOnUi(mSelectedMediaList);
+                }
+            }
+        }
+
+    }
+
+    protected void setMediaListOnUi(ArrayList<SocialMedia.Media> socialList) {
+        int count = socialList.size();
+        if (count == 1) {
+            String urlId = socialList.get(0).getId();
+            String url = socialList.get(0).getUrl();
+            setProfileUrlData(mUrl1ImageView, urlId, url);
+            mUrl1ImageView.setVisibility(View.VISIBLE);
+            mUrl2ImageView.setVisibility(View.GONE);
+            mUrl3ImageView.setVisibility(View.GONE);
+
+        } else if (count == 2) {
+            String urlId = socialList.get(0).getId();
+            String urlId1 = socialList.get(1).getId();
+            String url = socialList.get(0).getUrl();
+            String url1 = socialList.get(1).getUrl();
+            setProfileUrlData(mUrl1ImageView, urlId, url);
+            setProfileUrlData(mUrl2ImageView, urlId1, url1);
+            mUrl1ImageView.setVisibility(View.VISIBLE);
+            mUrl2ImageView.setVisibility(View.VISIBLE);
+            mUrl3ImageView.setVisibility(View.GONE);
+
+        } else if (count == 3) {
+            String urlId = socialList.get(0).getId();
+            String urlId1 = socialList.get(1).getId();
+            String urlId2 = socialList.get(2).getId();
+            String url = socialList.get(0).getUrl();
+            String url1 = socialList.get(1).getUrl();
+            String url2 = socialList.get(2).getUrl();
+            mUrl1ImageView.setVisibility(View.VISIBLE);
+            mUrl2ImageView.setVisibility(View.VISIBLE);
+            mUrl3ImageView.setVisibility(View.VISIBLE);
+
+            setProfileUrlData(mUrl1ImageView, urlId, url);
+            setProfileUrlData(mUrl2ImageView, urlId1, url1);
+            setProfileUrlData(mUrl3ImageView, urlId2, url2);
+        }
+    }
+
+
+    /**
+     * This method is used to set Profile Url icons on UI
+     *
+     * @param urlImagView:icon imageview
+     * @param id
+     * @param text
+     */
+    protected void setProfileUrlData(ImageView urlImagView, String id, String text) {
+        switch (id) {
+            case TWITTER_KEY:
+                urlImagView.setBackgroundDrawable(getBaseActivity().getResources().getDrawable(R.drawable.twitter));
+                break;
+            case FACEBOOK_KEY:
+                urlImagView.setBackgroundDrawable(getBaseActivity().getResources().getDrawable(R.drawable.fb));
+                break;
+            case LINKEDIN_KEY:
+                urlImagView.setBackgroundDrawable(getBaseActivity().getResources().getDrawable(R.drawable.linkdin));
+                break;
+            case GOOGLE_PLUS_KEY:
+                urlImagView.setBackgroundDrawable(getBaseActivity().getResources().getDrawable(R.drawable.ic_google_plus));
+                break;
+            case INSTAGRAM_KEY:
+                urlImagView.setBackgroundDrawable(getBaseActivity().getResources().getDrawable(R.drawable.instagram));
+                break;
+            case GITHUB_KEY:
+                urlImagView.setBackgroundDrawable(getBaseActivity().getResources().getDrawable(R.drawable.ic_github));
+                break;
+        }
+    }
+
+    protected void callWebIntent(String url) {
+        try {
+            Intent myIntent = new Intent(Intent.ACTION_VIEW);
+            myIntent.setData(Uri.parse(url));
+            startActivity(myIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getBaseActivity(), "No application can handle this request.Please install a webbrowser", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+
+    }
+
+    protected void showLogoutConfirmPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getBaseActivity());
+        builder.setTitle(R.string.app_name);
+        builder.setMessage("Are you sure you want to logout?");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                logoutDialog.dismiss();
+                if (!Utilities.checkInternet(getBaseActivity())) {
+                    showToast(R.string.no_internet_msg);
+                } else {
+                    callLogoutApi();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                logoutDialog.dismiss();
+            }
+        });
+        logoutDialog = builder.create();
+        logoutDialog.show();
+    }
+
+    private void callLogoutApi() {
+        showDialog();
+        GetProfileInput getProfileInput = new GetProfileInput();
+        getProfileInput.setUserId(mUserid);
+        Call<LogoutResponse> logit = GetRestAdapter.getRestAdapter(false).logout(getProfileInput);
+        logit.enqueue(new Callback<LogoutResponse>() {
+            @Override
+            public void onResponse(Call<LogoutResponse> call, Response<LogoutResponse> response) {
+                hideDialog();
+                if (response != null && response.body() != null) {
+                    showToast(response.body().getMessage());
+                    if (response.body().getStatus().equals("200")) {
+                        sharedPrefsHelper.clearAll();
+                        Intent intent = new Intent(getBaseActivity(), LoginActivity.class);
+                        startActivity(intent);
+                        getBaseActivity().finish();
+                    }
+                } else {
+                    showToast(R.string.server_error_msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LogoutResponse> call, Throwable t) {
+                hideDialog();
+                showToast(t.getMessage());
+
+            }
+        });
+
+    }
+
+}

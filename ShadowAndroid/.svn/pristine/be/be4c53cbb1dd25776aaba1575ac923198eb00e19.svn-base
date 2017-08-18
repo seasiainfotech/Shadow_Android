@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.shadow">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PRIVILEGED" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <application
+        android:name=".ShadowApp"
+        android:allowBackup="true"
+        android:icon="@drawable/shadow_purple"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAps1Zf4084IekFGnholIasqppIL4fESiA" />
+
+        <activity
+            android:name="org.acra.CrashReportDialog"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:process=":error_report"
+            android:theme="@style/Base.Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".views.auth.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.SplashActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".views.auth.ForgotPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.UsernameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.RegistrationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.PasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.user.UserActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.user.User1Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.school.SchoolActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.company.CompanyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.EmailVerificationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.PhoneVerificationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.EmailPhoneOtpVerifiyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.dashboard.DashboardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.profile.FullImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.forgotpassword.EmailForgotActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.forgotpassword.PhoneForgotActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.auth.forgotpassword.SetNewPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.search.SearchResultActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".addressvalidator.LocationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.ratingcomment.AddRatingCommentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.profile.editprofile.EditProfileCompanyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.profile.editprofile.EditProfileSchoolActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.profile.editprofile.EditProfileUserActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".views.videoRecording.CameraUploadActivity" />
+        <activity android:name=".views.videoRecording.RecordedVideoPlayActivity" />
+        <activity
+            android:name=".views.profile.AnotherUserProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.videoRecording.VideoPlayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.ratingcomment.UserOwnRatingViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.dashboard.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme"></activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,361 @@
+package com.android.shadow.views.profile.editprofile;
+
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+
+import com.android.shadow.R;
+import com.android.shadow.adapter.OccupationsAdapter;
+import com.android.shadow.dialog.OccupationsDialog;
+import com.android.shadow.dialog.SocialMediaDialog;
+import com.android.shadow.model.SocialMedia;
+import com.android.shadow.model.input.EditProfileInput;
+import com.android.shadow.model.output.GetProfileResponse;
+import com.android.shadow.presenter.EditProfilePresenter;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.utils.SharedPrefsHelper;
+import com.android.shadow.views.ExpandableHeightGridView;
+import com.android.shadow.views.core.BaseActivity;
+
+import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+/**
+ * Created by singhgharjyot on 6/26/2017.
+ */
+
+public class EditProfileBaseActivity extends BaseActivity implements OccupationsDialog.EditOccupationsCallback,
+        SocialMediaDialog.SocialMediaCallback {
+
+
+    public static final String FACEBOOK_KEY = "facebookUrl";
+    public static final String LINKEDIN_KEY = "linkedInUrl";
+    public static final String TWITTER_KEY = "twitterUrl";
+    public static final String GITHUB_KEY = "gitHubUrl";
+    public static final String GOOGLE_PLUS_KEY = "googlePlusUrl";
+    public static final String INSTAGRAM_KEY = "instagramUrl ";
+
+
+    public static final String FACEBOOK_URL = "https://www.facebook.com/";
+    public static final String LINKEDIN_URL = "https://in.linkedin.com/";
+    public static final String TWITTER_URL = "https://twitter.com/";
+    public static final String GITHUB_URL = "https://github.com/";
+    public static final String GOOGLE_PLUS_URL = "googlePlusUrl";
+    public static final String INSTAGRAM_URL = "https://www.instagram.com/";
+
+
+   protected RelativeLayout mProfileUrlRl;
+    public CircleImageView mAddImageView;
+    protected ExpandableHeightGridView mOccupationsGridView;
+    public ImageView mSaveImageView, mUploadVdoImagView,mIvPlusImageView;
+    public EditText mBioEditText, mUrl1EditText, mUrl2EditText, mUrl3EditText;
+    protected ImageView mUrl1TextView, mUrl2TextView, mUrl3TextView;
+    protected View mUrlView1, mUrlView2, mUrlView3;
+    protected EditProfilePresenter editProfilePresenter;
+    protected OccupationsDialog mOccupationsDialog;
+    protected String mUserId;
+    public String userImage;
+    public String filePath;
+
+    protected ArrayList<EditProfileInput.Occupations> mOccupationsList;
+    protected ArrayList<SocialMedia.Media> mAllSocialMediaList, mSelectedMediaList;
+
+    protected GetProfileResponse profileResponse;
+    protected SharedPrefsHelper mSharedPrefsHelper;
+    private OccupationsAdapter mOccupationsAdapter;
+
+
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
+
+    @Override
+    protected void initViews() {
+        mSharedPrefsHelper = new SharedPrefsHelper(this);
+        mUserId = mSharedPrefsHelper.get(PreferenceKeys.PREF_USER_ID);
+        mProfileUrlRl=(RelativeLayout)findViewById(R.id.rl_profile_links);
+        profileResponse = getIntent().getParcelableExtra("profile_response");
+        mIvPlusImageView=(ImageView)findViewById(R.id.iv_ic_plus);
+        mAddImageView = (CircleImageView) findViewById(R.id.iv_add_image);
+        mBioEditText = (EditText) findViewById(R.id.edit_text_add_company_bio);
+        mSaveImageView = (ImageView) findViewById(R.id.image_view_save);
+        mUploadVdoImagView = (ImageView) findViewById(R.id.iv_video_upload);
+        mOccupationsGridView = (ExpandableHeightGridView) findViewById(R.id.grid_view_occupations);
+        mOccupationsGridView.setExpanded(true);
+
+        mUrl1EditText = (EditText) findViewById(R.id.edit_text_url1);
+        mUrl2EditText = (EditText) findViewById(R.id.edit_text_url2);
+        mUrl3EditText = (EditText) findViewById(R.id.edit_text_url3);
+
+        mUrl1TextView = (ImageView) findViewById(R.id.tv_url1);
+        mUrl2TextView = (ImageView) findViewById(R.id.tv_url2);
+        mUrl3TextView = (ImageView) findViewById(R.id.tv_url3);
+
+        mUrlView1 = (View) findViewById(R.id.vie_url1);
+        mUrlView2 = (View) findViewById(R.id.vie_url2);
+        mUrlView3 = (View) findViewById(R.id.vie_url3);
+
+        mOccupationsList = new ArrayList<>();
+
+        addOccupationsData();
+        addAllSocialMedia();
+        addUserSelectedMediaList();
+    }
+
+    private void addOccupationsData() {
+        if (profileResponse != null && profileResponse.getData() != null
+                && profileResponse.getData().getOccupations() != null && profileResponse.getData().getOccupations().size() > 0) {
+
+            ArrayList<GetProfileResponse.Occupations> occuList = profileResponse.getData().getOccupations();
+            for (int i = 0; i < occuList.size(); i++) {
+                EditProfileInput.Occupations occupations = new EditProfileInput.Occupations();
+                occupations.setName(occuList.get(i).getName());
+                mOccupationsList.add(occupations);
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mOccupationsDialog == null) {
+            mOccupationsDialog = new OccupationsDialog(this, this);
+        }
+    }
+
+    @Override
+    public void dispose() {
+
+    }
+
+    @Override
+    public void getOccupationsList(ArrayList<EditProfileInput.Occupations> occupationsAdded) {
+        mOccupationsList = occupationsAdded;
+        mOccupationsAdapter.notifyAdapter(occupationsAdded);
+    }
+
+    protected void setOccupationsAdapter() {
+        mOccupationsAdapter = new OccupationsAdapter(this, mOccupationsList);
+        mOccupationsGridView.setAdapter(mOccupationsAdapter);
+    }
+
+
+    protected void addUserSelectedMediaList() {
+        mSelectedMediaList = new ArrayList<>();
+        if (profileResponse != null && profileResponse.getData() != null) {
+            GetProfileResponse.Data profileData = profileResponse.getData();
+
+            String linkedinUrl = profileData.getLinkedInUrl();
+            String facebookUrl = profileData.getFacebookUrl();
+            String githubUrl = profileData.getGitHubUrl();
+            String twitterUrl = profileData.getTwitterUrl();
+            String instagramUrl = profileData.getInstagramUrl();
+            String googlePlusUrl = profileData.getGooglePlusUrl();
+            if (!TextUtils.isEmpty(linkedinUrl)) {
+                SocialMedia.Media media = new SocialMedia().new Media();
+                media.setId(LINKEDIN_KEY);
+                media.setName("Linkedin");
+                media.setUrl(linkedinUrl);
+                media.setMediaSelected(true);
+                mSelectedMediaList.add(media);
+            }
+            if (!TextUtils.isEmpty(facebookUrl)) {
+                SocialMedia.Media media = new SocialMedia().new Media();
+                media.setId(FACEBOOK_KEY);
+                media.setName("Facebook");
+                media.setUrl(facebookUrl);
+                media.setMediaSelected(true);
+                mSelectedMediaList.add(media);
+            }
+            if (!TextUtils.isEmpty(githubUrl)) {
+                SocialMedia.Media media = new SocialMedia().new Media();
+                media.setId(GITHUB_KEY);
+                media.setName("Github");
+                media.setUrl(githubUrl);
+                media.setMediaSelected(true);
+                mSelectedMediaList.add(media);
+            }
+            if (!TextUtils.isEmpty(twitterUrl)) {
+                SocialMedia.Media media = new SocialMedia().new Media();
+                media.setId(TWITTER_KEY);
+                media.setName("Twitter");
+                media.setUrl(twitterUrl);
+                media.setMediaSelected(true);
+                mSelectedMediaList.add(media);
+            }
+            if (!TextUtils.isEmpty(instagramUrl)) {
+                SocialMedia.Media media = new SocialMedia().new Media();
+                media.setId(INSTAGRAM_KEY);
+                media.setName("Instagram");
+                media.setUrl(instagramUrl);
+                media.setMediaSelected(true);
+                mSelectedMediaList.add(media);
+
+
+            }
+            if (!TextUtils.isEmpty(googlePlusUrl)) {
+                SocialMedia.Media media = new SocialMedia().new Media();
+                media.setId(GOOGLE_PLUS_KEY);
+                media.setName("Google+");
+                media.setUrl(googlePlusUrl);
+                media.setMediaSelected(true);
+                mSelectedMediaList.add(media);
+            }
+            if (mSelectedMediaList != null && mSelectedMediaList.size() > 0) {
+                mProfileUrlRl.setVisibility(View.VISIBLE);
+                setMediaListOnUi(mSelectedMediaList);
+            }else {
+                mProfileUrlRl.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    protected void addAllSocialMedia() {
+        mAllSocialMediaList = new ArrayList<>();
+
+        SocialMedia.Media media1 = new SocialMedia().new Media();
+        media1.setId(LINKEDIN_KEY);
+        media1.setName("Linkedin");
+
+        SocialMedia.Media media2 = new SocialMedia().new Media();
+        media2.setId(FACEBOOK_KEY);
+        media2.setName("Facebook");
+
+        SocialMedia.Media media3 = new SocialMedia().new Media();
+        media3.setId(TWITTER_KEY);
+        media3.setName("Twitter");
+
+        SocialMedia.Media media4 = new SocialMedia().new Media();
+        media4.setId(GOOGLE_PLUS_KEY);
+        media4.setName("Google+");
+
+        SocialMedia.Media media5 = new SocialMedia().new Media();
+        media5.setId(INSTAGRAM_KEY);
+        media5.setName("Instagram");
+
+
+        SocialMedia.Media media6 = new SocialMedia().new Media();
+        media6.setId(GITHUB_KEY);
+        media6.setName("Github");
+
+        mAllSocialMediaList.add(media1);
+        mAllSocialMediaList.add(media2);
+        mAllSocialMediaList.add(media3);
+        mAllSocialMediaList.add(media4);
+        mAllSocialMediaList.add(media5);
+        mAllSocialMediaList.add(media6);
+
+
+    }
+
+    @Override
+    public void getSocialList(ArrayList<SocialMedia.Media> socialList) {
+        if (socialList != null && socialList.size() > 0) {
+            setMediaListOnUi(socialList);
+            mProfileUrlRl.setVisibility(View.VISIBLE);
+
+        } else {
+            mProfileUrlRl.setVisibility(View.GONE);
+            mUrl1TextView.setVisibility(View.GONE);
+            mUrl2TextView.setVisibility(View.GONE);
+            mUrl3TextView.setVisibility(View.GONE);
+            mUrl1EditText.setVisibility(View.GONE);
+            mUrl2EditText.setVisibility(View.GONE);
+            mUrl3EditText.setVisibility(View.GONE);
+            mUrlView1.setVisibility(View.GONE);
+            mUrlView2.setVisibility(View.GONE);
+            mUrlView3.setVisibility(View.GONE);
+        }
+    }
+
+    private void setMediaListOnUi(ArrayList<SocialMedia.Media> socialList) {
+        int count = socialList.size();
+        if (count == 1) {
+            String urlId = socialList.get(0).getId();
+            String url = socialList.get(0).getUrl();
+            setProfileUrlData(mUrl1TextView, mUrl1EditText, mUrlView1, urlId, url);
+            mUrl2TextView.setVisibility(View.GONE);
+            mUrl3TextView.setVisibility(View.GONE);
+            mUrl2EditText.setVisibility(View.GONE);
+            mUrl3EditText.setVisibility(View.GONE);
+            mUrlView2.setVisibility(View.GONE);
+            mUrlView3.setVisibility(View.GONE);
+
+        } else if (count == 2) {
+            String urlId = socialList.get(0).getId();
+            String urlId1 = socialList.get(1).getId();
+            String url = socialList.get(0).getUrl();
+            String url1 = socialList.get(1).getUrl();
+
+            setProfileUrlData(mUrl1TextView, mUrl1EditText, mUrlView1, urlId, url);
+            setProfileUrlData(mUrl2TextView, mUrl2EditText, mUrlView2, urlId1, url1);
+            mUrl3TextView.setVisibility(View.GONE);
+            mUrl3EditText.setVisibility(View.GONE);
+            mUrlView3.setVisibility(View.GONE);
+
+        } else if (count == 3) {
+            String urlId = socialList.get(0).getId();
+            String urlId1 = socialList.get(1).getId();
+            String urlId2 = socialList.get(2).getId();
+            String url = socialList.get(0).getUrl();
+            String url1 = socialList.get(1).getUrl();
+            String url2 = socialList.get(2).getUrl();
+            setProfileUrlData(mUrl1TextView, mUrl1EditText, mUrlView1, urlId, url);
+            setProfileUrlData(mUrl2TextView, mUrl2EditText, mUrlView2, urlId1, url1);
+            setProfileUrlData(mUrl3TextView, mUrl3EditText, mUrlView3, urlId2, url2);
+        }
+    }
+
+
+    protected void setProfileUrlData(ImageView urlTetxView, EditText urlEditText, View vew, String id, String text) {
+        switch (id) {
+            case TWITTER_KEY:
+                urlTetxView.setVisibility(View.VISIBLE);
+                urlEditText.setVisibility(View.VISIBLE);
+                vew.setVisibility(View.VISIBLE);
+                urlTetxView.setBackgroundDrawable(getResources().getDrawable(R.drawable.twitter));
+                urlEditText.setText(text);
+                break;
+            case FACEBOOK_KEY:
+                urlTetxView.setBackgroundDrawable(getResources().getDrawable(R.drawable.fb));
+                urlTetxView.setVisibility(View.VISIBLE);
+                urlEditText.setVisibility(View.VISIBLE);
+                urlEditText.setText(text);
+                vew.setVisibility(View.VISIBLE);
+                break;
+            case LINKEDIN_KEY:
+                urlTetxView.setBackgroundDrawable(getResources().getDrawable(R.drawable.linkedin_icon));
+                urlTetxView.setVisibility(View.VISIBLE);
+                urlEditText.setText(text);
+                urlEditText.setVisibility(View.VISIBLE);
+                vew.setVisibility(View.VISIBLE);
+                break;
+            case GOOGLE_PLUS_KEY:
+                urlTetxView.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_google_plus));
+                urlTetxView.setVisibility(View.VISIBLE);
+                urlEditText.setVisibility(View.VISIBLE);
+                vew.setVisibility(View.VISIBLE);
+                urlEditText.setText(text);
+                break;
+            case INSTAGRAM_KEY:
+                urlTetxView.setBackgroundDrawable(getResources().getDrawable(R.drawable.instagram));
+                urlTetxView.setVisibility(View.VISIBLE);
+                urlEditText.setVisibility(View.VISIBLE);
+                urlEditText.setText(text);
+                vew.setVisibility(View.VISIBLE);
+                break;
+            case GITHUB_KEY:
+                urlTetxView.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_github));
+                urlTetxView.setVisibility(View.VISIBLE);
+                urlEditText.setVisibility(View.VISIBLE);
+                vew.setVisibility(View.VISIBLE);
+                urlEditText.setText(text);
+                break;
+        }
+    }
+}

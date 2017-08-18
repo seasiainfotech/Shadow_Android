@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_search"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingRight="5dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/background_color" />
+
+    <TextView
+        android:id="@+id/text_view_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:text="00m"
+        android:visibility="visible" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/Circular_image_view_Profile_pic"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/text_view_distance"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/profile_gray" />
+
+
+    <TextView
+        android:id="@+id/temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:text="ratings"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/iv_rating_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignLeft="@+id/temp"
+        android:layout_below="@+id/text_view_distance"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/ic_star_yellow" />
+
+    <TextView
+        android:id="@+id/text_view_average_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_view_distance"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/iv_rating_icon"
+        android:text="4.9"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_view_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_view_distance"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/text_view_average_rating"
+        android:layout_toRightOf="@+id/Circular_image_view_Profile_pic"
+        android:singleLine="true"
+        android:text="fvg bgbg bgbghnb"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_no_of_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_view_average_rating"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/tv_No_of_rating_text"
+        android:text="5"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_No_of_rating_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/text_view_average_rating"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="2dp"
+        android:text="ratings" />
+
+
+    <ImageView
+        android:id="@+id/iv_icon_type"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/text_view_name"
+        android:layout_marginTop="7dp"
+        android:layout_toRightOf="@+id/Circular_image_view_Profile_pic"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/text_view_type_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_view_name"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="12dp"
+        android:layout_toLeftOf="@+id/tv_no_of_rating"
+        android:layout_toRightOf="@+id/iv_icon_type"
+        android:singleLine="true"
+        android:text="hfhkgg ghhgf ghgfg gjg"
+        android:textSize="12sp"
+        android:visibility="visible" />
+
+</RelativeLayout>

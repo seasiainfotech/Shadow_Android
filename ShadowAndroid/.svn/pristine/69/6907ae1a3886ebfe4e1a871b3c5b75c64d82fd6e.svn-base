@@ -1,0 +1,227 @@
+package com.android.shadow.dialog;
+
+import android.app.Dialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
+import com.android.shadow.R;
+import com.android.shadow.adapter.editprofile.EditOccupationsAddAdapter;
+import com.android.shadow.adapter.editprofile.EditOccupationsSubtractAdapter;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.interfaces.SkillsListCallback;
+import com.android.shadow.model.input.EditProfileInput;
+import com.android.shadow.model.input.GetOccupationInput;
+import com.android.shadow.model.output.GetAllOccupationResponse;
+import com.android.shadow.views.core.BaseActivity;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * @author jindaldipanshu
+ * @version 1.0
+ */
+public class OccupationsDialog implements View.OnClickListener, SkillsListCallback, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+
+    private static final String TAG = "OccupationsDialog";
+    private final BaseActivity baseActivity;
+    private Dialog mSelectionDialog;
+    private RecyclerView mSkillsAddedRecyclerView, mSkillsToAddRecyclerfView;
+    private SearchView mOccupationsSearchView;
+    public ArrayList<EditProfileInput.Occupations> mServerList, skillsSelectedlist;
+    private EditOccupationsSubtractAdapter editSkillsSubtractAdapter;
+    private EditOccupationsAddAdapter editSkillsAddAdapter;
+
+    private EditOccupationsCallback mOccupationsCallback;
+    private Button mDoneButton;
+
+
+    public interface EditOccupationsCallback {
+        void getOccupationsList(ArrayList<EditProfileInput.Occupations> skillsadded);
+    }
+
+    public OccupationsDialog(BaseActivity baseActivity, EditOccupationsCallback skillsCallback) {
+        this.baseActivity = baseActivity;
+        mOccupationsCallback = skillsCallback;
+    }
+
+
+    public void getAllOccupations(final ArrayList<EditProfileInput.Occupations> skills, String userId) {
+        baseActivity.showDialog();
+        GetOccupationInput getOccupationInput = new GetOccupationInput();
+        getOccupationInput.setUserId(userId);
+        //getOccupationInput.setPageIndex("0");
+      //  getOccupationInput.setPageSize("5");
+        Call<GetAllOccupationResponse> responseSkillsList = GetRestAdapter.getRestAdapter(false).getAllOccupation(getOccupationInput);
+        responseSkillsList.enqueue(new Callback<GetAllOccupationResponse>() {
+            @Override
+            public void onResponse(Call<GetAllOccupationResponse> call, Response<GetAllOccupationResponse> responseSkillsList) {
+                baseActivity.hideDialog();
+                if (responseSkillsList != null && responseSkillsList.body() != null) {
+                    Log.e("skills list ---", responseSkillsList.body().getData() + "");
+
+                    if (responseSkillsList.body().getData() != null &&
+                            responseSkillsList.body().getData().getOccupations() != null &&
+                            responseSkillsList.body().getData().getOccupations().size() > 0) {
+
+                        mServerList = new ArrayList<>();//pojo array
+
+                        ArrayList<GetAllOccupationResponse.Occupations> responseList = responseSkillsList.body().getData().getOccupations();
+                        ArrayList<EditProfileInput.Occupations> mTempServerList = new ArrayList<EditProfileInput.Occupations>();
+
+
+                        for (int i = 0; i < responseList.size(); i++) {
+                            EditProfileInput.Occupations skills = new EditProfileInput.Occupations();
+                            skills.setName(responseList.get(i).getName());
+                            //   skills.setSelected(false);
+                            mTempServerList.add(skills);
+                        }
+
+                        skillsSelectedlist = skills;
+                        mServerList.addAll(mTempServerList);
+
+                        //remove user selected skills from mServerList lists
+                        for (int i = 0; i < mTempServerList.size(); i++) {
+                            String ski_name = mTempServerList.get(i).getName();
+                            for (int j = 0; j < skillsSelectedlist.size(); j++) {
+                                if (ski_name.equals(skillsSelectedlist.get(j).getName())) {
+                                    EditProfileInput.Occupations skills1 = mTempServerList.get(i);
+                                    mServerList.remove(skills1);
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        showSkillsDialog(mServerList, skillsSelectedlist);
+                    }
+
+
+                } else {
+                    baseActivity.showToast(R.string.server_error_msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetAllOccupationResponse> call, Throwable t) {
+                baseActivity.hideDialog();
+                baseActivity.showToast(t.getMessage());
+            }
+        });
+    }
+
+
+    private void showSkillsDialog(ArrayList<EditProfileInput.Occupations> serverSkillslIst,
+                                  ArrayList<EditProfileInput.Occupations> skillsSelectedlist) {
+        mSelectionDialog = new Dialog(baseActivity);
+        mSelectionDialog.setContentView(R.layout.dialog_skills);
+        mDoneButton = (Button) mSelectionDialog.findViewById(R.id.button_done_skills);
+        mDoneButton.setOnClickListener(this);
+        mSkillsAddedRecyclerView = (RecyclerView) mSelectionDialog.findViewById(R.id.recycler_view_skills_added);
+        mSkillsToAddRecyclerfView = (RecyclerView) mSelectionDialog.findViewById(R.id.recycler_view_skills_to_add);
+        mSelectionDialog.findViewById(R.id.recycler_view_skills_to_add).setOnClickListener(this);
+        mOccupationsSearchView = (SearchView) mSelectionDialog.findViewById(R.id.search_view_occupations);
+
+        mOccupationsSearchView.setOnClickListener(this);
+        mOccupationsSearchView.setOnQueryTextListener(this);
+        mOccupationsSearchView.setOnCloseListener(this);
+        mSelectionDialog.show();
+
+
+        setSkillsSubtractAdapter(skillsSelectedlist);
+        setSkillsAddAdapter(serverSkillslIst);
+    }
+
+    private void setSkillsAddAdapter(ArrayList<EditProfileInput.Occupations> serverSkillslIst) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(baseActivity);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mSkillsToAddRecyclerfView.setLayoutManager(linearLayoutManager);
+        editSkillsAddAdapter = new EditOccupationsAddAdapter(baseActivity, mServerList, this);
+        mSkillsToAddRecyclerfView.setAdapter(editSkillsAddAdapter);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.button_done_skills:
+                mOccupationsCallback.getOccupationsList(skillsSelectedlist);
+                mSelectionDialog.dismiss();
+                break;
+            case R.id.search_view_occupations:
+                mOccupationsSearchView.setIconified(false);
+                break;
+        }
+    }
+
+    public void setSkillsSubtractAdapter(ArrayList<EditProfileInput.Occupations> mList) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(baseActivity);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mSkillsAddedRecyclerView.setLayoutManager(linearLayoutManager);
+        editSkillsSubtractAdapter = new EditOccupationsSubtractAdapter(baseActivity, mList, this);
+        mSkillsAddedRecyclerView.setAdapter(editSkillsSubtractAdapter);
+    }
+
+    @Override
+    public void onUpdate(EditProfileInput.Occupations skills, int position, ArrayList<EditProfileInput.Occupations> filteredList) {
+        //remove skills from server list and add to skillsselecetdList
+        skillsSelectedlist.add(skills);
+        //mServerList.remove()
+        String occupName = skills.getName();
+        for (int i = 0; i < mServerList.size(); i++) {
+            if (mServerList.get(i).getName().contains(occupName)) {
+                mServerList.remove(i);
+                break;
+            }
+        }
+
+        filteredList.remove(position);
+        editSkillsSubtractAdapter.notifyAdapter(skillsSelectedlist);
+        editSkillsAddAdapter.notifyAdapter(filteredList);
+    }
+
+    @Override
+    public void onUpdateSkill2(EditProfileInput.Occupations removedSkills, int posotion) {
+        skillsSelectedlist.remove(posotion);
+        mServerList.add(removedSkills);
+        editSkillsSubtractAdapter.notifyAdapter(skillsSelectedlist);
+        editSkillsAddAdapter.notifyAdapter(mServerList);
+    }
+
+    @Override
+    public boolean onClose() {
+        editSkillsAddAdapter.notifyAdapter(mServerList);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        ArrayList<EditProfileInput.Occupations> filteredList = new ArrayList<>();
+        if (mServerList != null && mServerList.size() > 0) {
+            for (int i = 0; i < mServerList.size(); i++) {
+                String serverListName=mServerList.get(i).getName().toLowerCase();
+                if (serverListName.contains(newText.toLowerCase())) {
+                    filteredList.add(mServerList.get(i));
+                }
+            }
+            if (filteredList != null && filteredList.size() > 0) {
+                editSkillsAddAdapter.notifyAdapter(filteredList);
+            }
+        }
+
+        return false;
+    }
+
+
+}

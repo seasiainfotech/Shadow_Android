@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.android.shadow.views.videoRecording.VideoPlayActivity">
+
+    <VideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+
+        />
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="@dimen/back_icon_width"
+        android:layout_height="@dimen/back_icon_height"
+        android:background="@drawable/back_icon"
+        android:layout_marginLeft="5dp"
+        android:padding="10dp"
+        />
+</RelativeLayout>

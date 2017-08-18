@@ -1,0 +1,81 @@
+package com.android.shadow.presenter;
+
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.android.shadow.R;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.model.input.EmailForgotPasswordInput;
+import com.android.shadow.model.output.EmailOtpResponse;
+import com.android.shadow.utils.Utilities;
+import com.android.shadow.views.core.BaseActivity;
+import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+
+/**
+ * Created by jindaldipanshu on 6/7/2017.
+ */
+
+public class EmailOtpPresenter {
+
+    private EmailOtpCallback mEmailForgotPasswordCallBack;
+    private BaseActivity mBaseActivity;
+
+    public EmailOtpPresenter(BaseActivity baseActivity, EmailOtpCallback emailForgotPasswordCallBack) {
+        this.mEmailForgotPasswordCallBack = emailForgotPasswordCallBack;
+        this.mBaseActivity = baseActivity;
+    }
+
+    public interface EmailOtpCallback {
+        void onEmailOtpSuccess(retrofit2.Response<EmailOtpResponse> responseResponse);
+    }
+
+    public void checkValidations(String... params) {
+        String email = params[0];
+
+        if (TextUtils.isEmpty(email)) {
+
+        } else if (!Utilities.isValidEmail(email)) {
+
+        } else {
+            if (!Utilities.checkInternet(mBaseActivity)) {
+                mBaseActivity.showToast(R.string.no_internet_msg);
+            } else {
+                EmailForgotPasswordInput emailForgotPasswordInput = new EmailForgotPasswordInput();
+                emailForgotPasswordInput.setEmail(email);
+                responseCheck(emailForgotPasswordInput);
+            }
+        }
+    }
+
+    private void responseCheck(EmailForgotPasswordInput emailForgotPasswordInput) {
+
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(emailForgotPasswordInput, EmailForgotPasswordInput.class);
+            Log.e("resend Otp input--", json);
+        } catch (Exception e) {
+
+        }
+
+        mBaseActivity.showDialog();
+        Call<EmailOtpResponse> response = GetRestAdapter.getRestAdapter(false).emailForgotPassword(emailForgotPasswordInput);
+        response.enqueue(new Callback<EmailOtpResponse>() {
+            @Override
+            public void onResponse(Call<EmailOtpResponse> call, retrofit2.Response<EmailOtpResponse> response) {
+                mBaseActivity.hideDialog();
+                mEmailForgotPasswordCallBack.onEmailOtpSuccess(response);
+            }
+
+            @Override
+            public void onFailure(Call<EmailOtpResponse> call, Throwable t) {
+                mBaseActivity.hideDialog();
+                mBaseActivity.showToast(t.getLocalizedMessage());
+            }
+        });
+    }
+
+
+}

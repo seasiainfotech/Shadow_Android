@@ -1,0 +1,244 @@
+package com.android.shadow.views.dashboard;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
+
+import com.android.shadow.R;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.model.input.GetProfileInput;
+import com.android.shadow.model.output.LogoutResponse;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.utils.SharedPrefsHelper;
+import com.android.shadow.utils.Utilities;
+import com.android.shadow.views.auth.LoginActivity;
+import com.android.shadow.views.core.BaseActivity;
+import com.android.shadow.views.profile.ourprofile.CompanyProfileFragment;
+import com.android.shadow.views.profile.ourprofile.UserProfileFragment;
+import com.android.shadow.views.profile.ourprofile.SchoolProfileFragment;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * Created by jindaldipanshu on 5/30/2017.
+ */
+
+public class DasdboardBaseActivity extends BaseActivity {
+    protected FrameLayout mFrameLayout;
+    protected ImageView mProfileImageView, mSearchImageView, mBlogImageView;
+    protected View mProfileView, mSearchView, mBlogView;
+    protected SharedPrefsHelper mSharedPrefsHelper;
+    protected String mUserRole;
+    protected ImageView mStar1ImgVw, mStar2ImgVw, mStar3ImgVw, mStar4ImgVw, mStar5ImgVw;
+    protected ImageView mNotificationImageView, mMessageImageView, mRequestImageView;
+    protected  Toolbar toolbar;
+    protected RelativeLayout mRatingRl,mSearchRl;
+    private String mUserId;
+    private Dialog logoutDialog;
+
+
+    @Override
+    public void dispose() {
+
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void initViews() {
+          toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        mSharedPrefsHelper = new SharedPrefsHelper(this);
+        mUserId=mSharedPrefsHelper.get(PreferenceKeys.PREF_USER_ID);
+        mUserRole = mSharedPrefsHelper.get(PreferenceKeys.PREF_REGIS);
+        mFrameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        //  mBlogImageView = (ImageView) findViewById(R.id.image_view_blog);
+        mSearchImageView = (ImageView) findViewById(R.id.image_view_search);
+        mProfileImageView = (ImageView) findViewById(R.id.image_view_profile);
+
+        mProfileView = (View) findViewById(R.id.view_profile);
+        mSearchView = (View) findViewById(R.id.view_search);
+
+        mRatingRl =(RelativeLayout)toolbar.findViewById(R.id.rl_toolbar);
+        mSearchRl =(RelativeLayout)toolbar.findViewById(R.id.rl_search_view);
+         mSearchRl.setVisibility(View.GONE);
+
+        mProfileImageView.setBackground(ContextCompat.getDrawable(this, R.drawable.profile_purple));
+
+        mStar1ImgVw = (ImageView)toolbar. findViewById(R.id.iv_star1);
+        mStar2ImgVw = (ImageView) toolbar.findViewById(R.id.iv_star2);
+        mStar3ImgVw = (ImageView)toolbar. findViewById(R.id.iv_star3);
+        mStar4ImgVw = (ImageView) toolbar.findViewById(R.id.iv_star4);
+        mStar5ImgVw = (ImageView) toolbar.findViewById(R.id.iv_star5);
+        
+        mNotificationImageView = (ImageView) toolbar. findViewById(R.id.iv_notification);
+        mMessageImageView = (ImageView)toolbar.  findViewById(R.id.iv_message);
+        mRequestImageView = (ImageView)toolbar. findViewById(R.id.iv_request);
+
+    }
+
+    /**
+     * This method is used to check which user role is registered
+     * either user role,school role or company role
+     * and replace fragment according to that user.
+     */
+    protected void replaceProfileFragment() {
+        if (mUserRole.contains("USER") || mUserRole.contains("user")) {
+            replaceFragment(new UserProfileFragment(), null);
+        } else if (mUserRole.contains("SCHOOL")  || mUserRole.contains("school")) {
+            replaceFragment(new SchoolProfileFragment(), null);
+        } else if (mUserRole.contains("COMPANY") || mUserRole.contains("company")) {
+            replaceFragment(new CompanyProfileFragment(), null);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void setRating(int rating) {
+        switch (rating) {
+            case 1:
+                mStar1ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+
+                mStar2ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar3ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar4ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar5ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar1ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+
+
+                break;
+            case 2:
+                mStar1ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar4ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar5ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar1ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+                mStar2ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+
+                break;
+            case 3:
+                mStar1ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar4ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar5ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+
+                mStar1ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+                mStar2ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+                mStar3ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+
+
+                break;
+            case 4:
+                mStar1ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar4ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar5ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_grey));
+                mStar1ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+                mStar2ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+                mStar3ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+                mStar4ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+
+
+
+                break;
+            case 5:
+                mStar1ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar2ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar3ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar4ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+                mStar5ImgVw.setBackgroundDrawable( getResources().getDrawable(R.drawable.ic_star_yellow));
+
+
+                mStar1ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+                mStar2ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+                mStar3ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+                mStar4ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+                mStar5ImgVw.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow_star)));
+
+
+                break;
+        }
+    }
+
+
+    protected void showLogoutConfirmPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name);
+        builder.setMessage("Are you sure you want to logout?");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                logoutDialog.dismiss();
+                if (!Utilities.checkInternet(DasdboardBaseActivity.this)) {
+                    showToast(R.string.no_internet_msg);
+                } else {
+                    callLogoutApi();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                logoutDialog.dismiss();
+            }
+        });
+        logoutDialog = builder.create();
+        logoutDialog.show();
+    }
+
+    private void callLogoutApi() {
+        showDialog();
+        GetProfileInput getProfileInput = new GetProfileInput();
+        getProfileInput.setUserId(mUserId);
+        Call<LogoutResponse> logit = GetRestAdapter.getRestAdapter(false).logout(getProfileInput);
+        logit.enqueue(new Callback<LogoutResponse>() {
+            @Override
+            public void onResponse(Call<LogoutResponse> call, Response<LogoutResponse> response) {
+                hideDialog();
+                if (response != null && response.body() != null) {
+                    showToast(response.body().getMessage());
+                    if (response.body().getStatus().equals("200")) {
+                        mSharedPrefsHelper.clearAll();
+                        Intent intent = new Intent(DasdboardBaseActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                         finish();
+                    }
+                } else {
+                    showToast(R.string.server_error_msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LogoutResponse> call, Throwable t) {
+                hideDialog();
+                showToast(t.getMessage());
+
+            }
+        });
+
+    }
+
+
+
+}

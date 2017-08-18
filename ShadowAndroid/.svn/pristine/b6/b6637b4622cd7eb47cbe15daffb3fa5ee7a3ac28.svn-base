@@ -1,0 +1,418 @@
+package com.android.shadow.views.search;
+
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.android.shadow.R;
+import com.android.shadow.model.output.SearchAllTypeListResponse;
+import com.android.shadow.model.output.SearchLocationListResponse;
+import com.android.shadow.model.output.SearchSimpleResponse;
+import com.android.shadow.views.profile.AnotherUserProfileActivity;
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+/**
+ * Created by singhgharjyot on 7/4/2017.
+ */
+
+public class ScreenSlidePageFragment extends Fragment implements View.OnClickListener {
+
+    private int mPosition;
+    private Button mbutton;
+    private TextView mSchoolName, mSchoolLocation, mNumberFollowing, mNumberFollowers, mSchoolUrl, mNumberOfCompaniesWithOccu,
+            mNumberUsersAttendThisSchool, mBioSchool, mNumberFollowingSchool, mNumberFollowersSchool, mCompanyName, mCompanyLocation, mCompanyUrl,
+            mNoFollowingCompany, mNoFollowersCompany, mSchoolsWithTheseOccu, mNoUsersEmployed, mBioCompany, mUsername, mUserSchool, mUserCompany,
+            mNoFollowingUser, mNoFollowersUser, mBioUser;
+    private CircleImageView mSchoolImage, mCompanyImage, mUserImage;
+    private String mFilterSelected;
+    private ArrayList<SearchAllTypeListResponse.Data> mAllTypeList;
+    private ArrayList<SearchLocationListResponse.Data> mLocationList;
+    private ArrayList<SearchSimpleResponse.Data> mSimpleList;
+    private ViewGroup rootView;
+    private String mRoleType = "";
+    private String mServiceType; // all_type for searchalltypelistbytype, location for searchalltypeusinglocation,simple for just normal search
+    private TextView mNumberCompaniesWithOccuSchool;
+    private TextView mNumberUsersAttendedThisSchool;
+    private TextView mViewFullProfileSchool;
+    private TextView mViewFullProfileCompany;
+    private TextView mViewFullProfileUser;
+
+
+    public ScreenSlidePageFragment(ArrayList<SearchAllTypeListResponse.Data> dataList, int position, String filterSelected, String serviceType) {
+        mAllTypeList = dataList;
+        mPosition = position;
+        mFilterSelected = filterSelected;
+        mServiceType = serviceType;
+    }
+
+    public ScreenSlidePageFragment(ArrayList<SearchLocationListResponse.Data> dataList, int position, String serviceType) {
+        mLocationList = dataList;
+        mPosition = position;
+        mServiceType = serviceType;
+    }
+
+    public ScreenSlidePageFragment(ArrayList<SearchSimpleResponse.Data> dataList, int position, String mFilterSelected, String serviceType, String s) {
+        mSimpleList = dataList;
+        mPosition = position;
+        mServiceType = serviceType;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        if (mServiceType.equals("location")) {
+            if (mLocationList != null) {
+                mRoleType = mLocationList.get(mPosition).getUserDTO().getRole();
+            }
+            if (mRoleType.equals("SCHOOL")) {
+                rootView = (ViewGroup) inflater.inflate(
+                        R.layout.fragment_screen_slide_school_page, container, false);
+                if (mLocationList != null) {
+                    mSchoolImage = (CircleImageView) rootView.findViewById(R.id.iv_user_profile);
+                    mSchoolName = (TextView) rootView.findViewById(R.id.text_view_user_name);
+                    mSchoolLocation = (TextView) rootView.findViewById(R.id.text_view_school_location);
+                    mSchoolUrl = (TextView) rootView.findViewById(R.id.text_view_school_url);
+                    mNumberFollowingSchool = (TextView) rootView.findViewById(R.id.tv_following);
+                    mNumberFollowersSchool = (TextView) rootView.findViewById(R.id.tv_followers);
+                    mNumberCompaniesWithOccuSchool = (TextView) rootView.findViewById(R.id.tv_no_companies_with_occupations);
+                    mNumberUsersAttendedThisSchool = (TextView) rootView.findViewById(R.id.tv_users_this_school);
+                    mBioSchool = (TextView) rootView.findViewById(R.id.text_view_bio);
+                    mViewFullProfileSchool = (TextView) rootView.findViewById(R.id.text_view_full_profile_school);
+                    mViewFullProfileSchool.setOnClickListener(this);
+
+
+                    Glide.with(this).load(mLocationList.get(mPosition).getUserDTO().getProfileImageUrl()).
+                            error(getActivity().getResources().getDrawable(R.drawable.profile_gray)).
+                            into(mSchoolImage);
+                    mSchoolName.setText(mLocationList.get(mPosition).getName());
+                    mSchoolUrl.setText(mLocationList.get(mPosition).getUserDTO().getSchoolUrl());
+                    mSchoolLocation.setText(mLocationList.get(mPosition).getAddress());
+                    mBioSchool.setText(mLocationList.get(mPosition).getUserDTO().getBio());
+                    mNumberFollowingSchool.setText(mLocationList.get(mPosition).getUserDTO().getShadowedByShadowUser().getCount());
+                    mNumberFollowersSchool.setText(mLocationList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mNumberCompaniesWithOccuSchool.setText(mLocationList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseOccupations().getCount());
+                    mNumberUsersAttendedThisSchool.setText(mLocationList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseUsers().getCount());
+                }
+            } else if (mRoleType.equals("COMPANY")) {
+                rootView = (ViewGroup) inflater.inflate(
+                        R.layout.fragment_screen_slide_company_page, container, false);
+                if (mLocationList != null) {
+                    mCompanyImage = (CircleImageView) rootView.findViewById(R.id.iv_user_profile);
+                    mCompanyName = (TextView) rootView.findViewById(R.id.text_view_user_name);
+                    mCompanyLocation = (TextView) rootView.findViewById(R.id.text_view_location);
+                    mCompanyUrl = (TextView) rootView.findViewById(R.id.text_view_comp_url);
+                    mNoFollowingCompany = (TextView) rootView.findViewById(R.id.tv_following);
+                    mNoFollowersCompany = (TextView) rootView.findViewById(R.id.tv_followers);
+                    mSchoolsWithTheseOccu = (TextView) rootView.findViewById(R.id.tv_school_with_occupatons);
+                    mNoUsersEmployed = (TextView) rootView.findViewById(R.id.tv_users_employed);
+                    mBioCompany = (TextView) rootView.findViewById(R.id.text_view_bio);
+                    mViewFullProfileCompany = (TextView) rootView.findViewById(R.id.text_view_full_profile_company);
+                    mViewFullProfileCompany.setOnClickListener(this);
+
+
+                    Glide.with(this).load(mLocationList.get(mPosition).getUserDTO().getProfileImageUrl()).
+                            error(getActivity().getResources().getDrawable(R.drawable.profile_gray)).
+                            into(mCompanyImage);
+                    mBioCompany.setText(mLocationList.get(mPosition).getUserDTO().getBio());
+                    mNoFollowingCompany.setText(mLocationList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mNoFollowersCompany.setText(mLocationList.get(mPosition).getUserDTO().getShadowedByShadowUser().getCount());
+                    mSchoolsWithTheseOccu.setText(mLocationList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseOccupations().getCount());
+                    mNoUsersEmployed.setText(mLocationList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseUsers().getCount());
+                    mCompanyUrl.setText(mLocationList.get(mPosition).getUserDTO().getCompanyUrl());
+                    mCompanyName.setText(mLocationList.get(mPosition).getName());
+                    mCompanyLocation.setText(mLocationList.get(mPosition).getUserDTO().getLocation());
+                }
+            } else if (mRoleType.equals("USER")) {
+                rootView = (ViewGroup) inflater.inflate(
+                        R.layout.fragment_screen_slide_user_page, container, false);
+                if (mLocationList != null) {
+                    mUserImage = (CircleImageView) rootView.findViewById(R.id.iv_user_profile);
+                    mUsername = (TextView) rootView.findViewById(R.id.text_view_user_name);
+                    mUserSchool = (TextView) rootView.findViewById(R.id.text_view_user_school);
+                    mUserCompany = (TextView) rootView.findViewById(R.id.text_view_user_company);
+                    mNoFollowingUser = (TextView) rootView.findViewById(R.id.tv_following);
+                    mNoFollowersUser = (TextView) rootView.findViewById(R.id.tv_followers);
+                    mBioUser = (TextView) rootView.findViewById(R.id.text_view_bio);
+                    mViewFullProfileUser = (TextView) rootView.findViewById(R.id.text_view_full_profile_user);
+                    mViewFullProfileUser.setOnClickListener(this);
+
+                    Glide.with(this).load(mLocationList.get(mPosition).getUserDTO().getProfileImageUrl()).
+                            error(getActivity().getResources().getDrawable(R.drawable.profile_gray)).
+                            into(mUserImage);
+                    mUsername.setText(mLocationList.get(mPosition).getName());
+                    mUserSchool.setText(mLocationList.get(mPosition).getUserDTO().getSchoolName());
+                    mUserCompany.setText(mLocationList.get(mPosition).getUserDTO().getCompanyName());
+                    mNoFollowingUser.setText(mLocationList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mNoFollowersUser.setText(mLocationList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mBioUser.setText(mLocationList.get(mPosition).getUserDTO().getBio());
+                }
+            }
+
+        } else if (mServiceType.equals("all_type")) {
+            if (mAllTypeList != null) {
+                mRoleType = mAllTypeList.get(mPosition).getUserDTO().getRole();
+            }
+            if (mRoleType.equals("SCHOOL")) {
+                rootView = (ViewGroup) inflater.inflate(
+                        R.layout.fragment_screen_slide_school_page, container, false);
+                if (mAllTypeList != null) {
+                    mSchoolImage = (CircleImageView) rootView.findViewById(R.id.iv_user_profile);
+                    mSchoolName = (TextView) rootView.findViewById(R.id.text_view_user_name);
+                    mSchoolLocation = (TextView) rootView.findViewById(R.id.text_view_school_location);
+                    mSchoolUrl = (TextView) rootView.findViewById(R.id.text_view_school_url);
+                    mNumberFollowingSchool = (TextView) rootView.findViewById(R.id.tv_following);
+                    mNumberFollowersSchool = (TextView) rootView.findViewById(R.id.tv_followers);
+                    mBioSchool = (TextView) rootView.findViewById(R.id.text_view_bio);
+                    mNumberCompaniesWithOccuSchool = (TextView) rootView.findViewById(R.id.tv_no_companies_with_occupations);
+                    mNumberUsersAttendedThisSchool = (TextView) rootView.findViewById(R.id.tv_users_this_school);
+                    mViewFullProfileSchool = (TextView) rootView.findViewById(R.id.text_view_full_profile_school);
+                    mViewFullProfileSchool.setOnClickListener(this);
+
+
+                    Glide.with(this).load(mAllTypeList.get(mPosition).getUserDTO().getProfileImageUrl()).
+                            error(getActivity().getResources().getDrawable(R.drawable.profile_gray)).
+                            into(mSchoolImage);
+                    mSchoolName.setText(mAllTypeList.get(mPosition).getName());
+                    mSchoolLocation.setText(mAllTypeList.get(mPosition).getAddress());
+                    mSchoolUrl.setText(mAllTypeList.get(mPosition).getUserDTO().getSchoolUrl());
+                    mBioSchool.setText(mAllTypeList.get(mPosition).getUserDTO().getBio());
+                    mNumberFollowingSchool.setText(mAllTypeList.get(mPosition).getUserDTO().getShadowedByShadowUser().getCount());
+                    mNumberFollowersSchool.setText(mAllTypeList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mNumberCompaniesWithOccuSchool.setText(mAllTypeList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseOccupations().getCount());
+                    mNumberUsersAttendedThisSchool.setText(mAllTypeList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseUsers().getCount());
+                }
+            } else if (mRoleType.equals("COMPANY")) {
+                rootView = (ViewGroup) inflater.inflate(
+                        R.layout.fragment_screen_slide_company_page, container, false);
+                if (mAllTypeList != null) {
+                    mCompanyImage = (CircleImageView) rootView.findViewById(R.id.iv_user_profile);
+                    mCompanyName = (TextView) rootView.findViewById(R.id.text_view_user_name);
+                    mCompanyLocation = (TextView) rootView.findViewById(R.id.text_view_location);
+                    mCompanyUrl = (TextView) rootView.findViewById(R.id.text_view_comp_url);
+                    mNoFollowingCompany = (TextView) rootView.findViewById(R.id.tv_following);
+                    mNoFollowersCompany = (TextView) rootView.findViewById(R.id.tv_followers);
+                    mSchoolsWithTheseOccu = (TextView) rootView.findViewById(R.id.tv_school_with_occupatons);
+                    mNoUsersEmployed = (TextView) rootView.findViewById(R.id.tv_users_employed);
+                    mBioCompany = (TextView) rootView.findViewById(R.id.text_view_bio);
+                    mViewFullProfileCompany = (TextView) rootView.findViewById(R.id.text_view_full_profile_company);
+                    mViewFullProfileCompany.setOnClickListener(this);
+
+                    Glide.with(this).load(mAllTypeList.get(mPosition).getUserDTO().getProfileImageUrl()).
+                            error(getActivity().getResources().getDrawable(R.drawable.profile_gray)).
+                            into(mCompanyImage);
+                    mBioCompany.setText(mAllTypeList.get(mPosition).getUserDTO().getBio());
+                    mNoFollowingCompany.setText(mAllTypeList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mNoFollowersCompany.setText(mAllTypeList.get(mPosition).getUserDTO().getShadowedByShadowUser().getCount());
+                    mSchoolsWithTheseOccu.setText(mAllTypeList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseOccupations().getCount());
+                    mNoUsersEmployed.setText(mAllTypeList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseUsers().getCount());
+                    mCompanyUrl.setText(mAllTypeList.get(mPosition).getUserDTO().getCompanyUrl());
+                    mCompanyName.setText(mAllTypeList.get(mPosition).getName());
+                    mCompanyLocation.setText(mAllTypeList.get(mPosition).getUserDTO().getLocation());
+                }
+            } else if (mRoleType.equals("USER")) {
+                rootView = (ViewGroup) inflater.inflate(
+                        R.layout.fragment_screen_slide_user_page, container, false);
+                if (mAllTypeList != null) {
+                    mUserImage = (CircleImageView) rootView.findViewById(R.id.iv_user_profile);
+                    mUsername = (TextView) rootView.findViewById(R.id.text_view_user_name);
+                    mUserSchool = (TextView) rootView.findViewById(R.id.text_view_user_school);
+                    mUserCompany = (TextView) rootView.findViewById(R.id.text_view_user_company);
+                    mNoFollowingUser = (TextView) rootView.findViewById(R.id.tv_following);
+                    mNoFollowersUser = (TextView) rootView.findViewById(R.id.tv_followers);
+                    mBioUser = (TextView) rootView.findViewById(R.id.text_view_bio);
+                    mViewFullProfileUser = (TextView) rootView.findViewById(R.id.text_view_full_profile_user);
+                    mViewFullProfileUser.setOnClickListener(this);
+
+                    Glide.with(this).load(mAllTypeList.get(mPosition).getUserDTO().getProfileImageUrl())
+                            .error(getActivity().getResources().getDrawable(R.drawable.profile_gray))
+                            .into(mUserImage);
+                    mUsername.setText(mAllTypeList.get(mPosition).getName());
+                    mUserSchool.setText(mAllTypeList.get(mPosition).getUserDTO().getSchoolName());
+                    mUserCompany.setText(mAllTypeList.get(mPosition).getUserDTO().getCompanyName());
+                    mNoFollowingUser.setText(mAllTypeList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mNoFollowersUser.setText(mAllTypeList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mBioUser.setText(mAllTypeList.get(mPosition).getUserDTO().getBio());
+                }
+            }
+        } else if (mServiceType.equals("simple")) {
+            if (mSimpleList != null) {
+                mRoleType = mSimpleList.get(mPosition).getUserDTO().getRole();
+            }
+            if (mRoleType.equals("SCHOOL")) {
+                rootView = (ViewGroup) inflater.inflate(
+                        R.layout.fragment_screen_slide_school_page, container, false);
+                if (mSimpleList != null) {
+                    mSchoolImage = (CircleImageView) rootView.findViewById(R.id.iv_user_profile);
+                    mSchoolName = (TextView) rootView.findViewById(R.id.text_view_user_name);
+                    mSchoolLocation = (TextView) rootView.findViewById(R.id.text_view_school_location);
+                    mSchoolUrl = (TextView) rootView.findViewById(R.id.text_view_school_url);
+                    mNumberFollowingSchool = (TextView) rootView.findViewById(R.id.tv_following);
+                    mNumberFollowersSchool = (TextView) rootView.findViewById(R.id.tv_followers);
+                    mBioSchool = (TextView) rootView.findViewById(R.id.text_view_bio);
+                    mNumberCompaniesWithOccuSchool = (TextView) rootView.findViewById(R.id.tv_no_companies_with_occupations);
+                    mNumberUsersAttendedThisSchool = (TextView) rootView.findViewById(R.id.tv_users_this_school);
+                    mViewFullProfileSchool = (TextView) rootView.findViewById(R.id.text_view_full_profile_school);
+                    mViewFullProfileSchool.setOnClickListener(this);
+
+
+                    Glide.with(this).load(mSimpleList.get(mPosition).getUserDTO().getProfileImageUrl())
+                            .error(getActivity().getResources().getDrawable(R.drawable.profile_gray))
+                            .into(mSchoolImage);
+                    mSchoolName.setText(mSimpleList.get(mPosition).getName());
+                    mSchoolLocation.setText(mSimpleList.get(mPosition).getAddress());
+                    mSchoolUrl.setText(mSimpleList.get(mPosition).getUserDTO().getSchoolUrl());
+                    mBioSchool.setText(mSimpleList.get(mPosition).getUserDTO().getBio());
+                    mNumberFollowingSchool.setText(mSimpleList.get(mPosition).getUserDTO().getShadowedByShadowUser().getCount());
+                    mNumberFollowersSchool.setText(mSimpleList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mNumberCompaniesWithOccuSchool.setText(mSimpleList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseOccupations().getCount());
+                    mNumberUsersAttendedThisSchool.setText(mSimpleList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseUsers().getCount());
+
+                }
+            } else if (mRoleType.equals("COMPANY")) {
+                rootView = (ViewGroup) inflater.inflate(
+                        R.layout.fragment_screen_slide_company_page, container, false);
+                if (mSimpleList != null) {
+                    mCompanyImage = (CircleImageView) rootView.findViewById(R.id.iv_user_profile);
+                    mCompanyName = (TextView) rootView.findViewById(R.id.text_view_user_name);
+                    mCompanyLocation = (TextView) rootView.findViewById(R.id.text_view_location);
+                    mCompanyUrl = (TextView) rootView.findViewById(R.id.text_view_comp_url);
+                    mNoFollowingCompany = (TextView) rootView.findViewById(R.id.tv_following);
+                    mNoFollowersCompany = (TextView) rootView.findViewById(R.id.tv_followers);
+                    mSchoolsWithTheseOccu = (TextView) rootView.findViewById(R.id.tv_school_with_occupatons);
+                    mNoUsersEmployed = (TextView) rootView.findViewById(R.id.tv_users_employed);
+                    mBioCompany = (TextView) rootView.findViewById(R.id.text_view_bio);
+                    mViewFullProfileCompany = (TextView) rootView.findViewById(R.id.text_view_full_profile_company);
+                    mViewFullProfileCompany.setOnClickListener(this);
+
+                    Glide.with(this).
+                            load(mSimpleList.get(mPosition).getUserDTO().getProfileImageUrl()).
+                            error(getActivity().getResources().getDrawable(R.drawable.profile_gray)).
+                            into(mCompanyImage);
+                    mBioCompany.setText(mSimpleList.get(mPosition).getUserDTO().getBio());
+                    mNoFollowingCompany.setText(mSimpleList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mNoFollowersCompany.setText(mSimpleList.get(mPosition).getUserDTO().getShadowedByShadowUser().getCount());
+                    mSchoolsWithTheseOccu.setText(mSimpleList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseOccupations().getCount());
+                    mNoUsersEmployed.setText(mSimpleList.get(mPosition).getUserDTO().getSchoolOrCompanyWithTheseUsers().getCount());
+                    mCompanyUrl.setText(mSimpleList.get(mPosition).getUserDTO().getCompanyUrl());
+                    mCompanyName.setText(mSimpleList.get(mPosition).getName());
+                    mCompanyLocation.setText(mSimpleList.get(mPosition).getUserDTO().getLocation());
+                }
+            } else if (mRoleType.equals("USER")) {
+                rootView = (ViewGroup) inflater.inflate(
+                        R.layout.fragment_screen_slide_user_page, container, false);
+                if (mSimpleList != null) {
+                    mUserImage = (CircleImageView) rootView.findViewById(R.id.iv_user_profile);
+                    mUsername = (TextView) rootView.findViewById(R.id.text_view_user_name);
+                    mUserSchool = (TextView) rootView.findViewById(R.id.text_view_user_school);
+                    mUserCompany = (TextView) rootView.findViewById(R.id.text_view_user_company);
+                    mNoFollowingUser = (TextView) rootView.findViewById(R.id.tv_following);
+                    mNoFollowersUser = (TextView) rootView.findViewById(R.id.tv_followers);
+                    mBioUser = (TextView) rootView.findViewById(R.id.text_view_bio);
+                    mViewFullProfileUser = (TextView) rootView.findViewById(R.id.text_view_full_profile_user);
+                    mViewFullProfileUser.setOnClickListener(this);
+
+                    Glide.with(this).load(mSimpleList.get(mPosition).getUserDTO().getProfileImageUrl()).
+                            error(getActivity().getResources().getDrawable(R.drawable.profile_gray)).
+                            into(mUserImage);
+                    mUsername.setText(mSimpleList.get(mPosition).getName());
+                    mUserSchool.setText(mSimpleList.get(mPosition).getUserDTO().getSchoolName());
+                    mUserCompany.setText(mSimpleList.get(mPosition).getUserDTO().getCompanyName());
+                    mNoFollowingUser.setText(mSimpleList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mNoFollowersUser.setText(mSimpleList.get(mPosition).getUserDTO().getShadowersVerified().getCount());
+                    mBioUser.setText(mSimpleList.get(mPosition).getUserDTO().getBio());
+                }
+            }
+        }
+        return rootView;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.text_view_full_profile_company:
+                if (mServiceType.equals("location")) {
+                    Intent intent = new Intent(getActivity(), AnotherUserProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("user_id",mLocationList.get(mPosition).getUserId());
+                    bundle.putString("user_role", mLocationList.get(mPosition).getUserDTO().getRole());
+                    intent.putExtras(bundle);
+                    getActivity().startActivity(intent);
+                } else if (mServiceType.equals("all_type")) {
+                    Intent intent = new Intent(getActivity(), AnotherUserProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("user_id",mAllTypeList.get(mPosition).getUserId());
+                    bundle.putString("user_role",mAllTypeList.get(mPosition).getUserDTO().getRole());
+                    intent.putExtras(bundle);
+                    getActivity().startActivity(intent);
+                } else if (mServiceType.equals("simple")) {
+                    Intent intent = new Intent(getActivity(), AnotherUserProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("user_id", mSimpleList.get(mPosition).getUserId());
+                    bundle.putString("user_role", mSimpleList.get(mPosition).getUserDTO().getRole());
+                    intent.putExtras(bundle);
+                    getActivity().startActivity(intent);
+                }
+                break;
+            case R.id.text_view_full_profile_school:
+                if (mServiceType.equals("location")) {
+                    Intent intent = new Intent(getActivity(), AnotherUserProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("user_id",mLocationList.get(mPosition).getUserId());
+                    bundle.putString("user_role", mLocationList.get(mPosition).getUserDTO().getRole());
+                    intent.putExtras(bundle);
+                    getActivity().startActivity(intent);
+                } else if (mServiceType.equals("all_type")) {
+                    Intent intent = new Intent(getActivity(), AnotherUserProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("user_id",mAllTypeList.get(mPosition).getUserId());
+                    bundle.putString("user_role",mAllTypeList.get(mPosition).getUserDTO().getRole());
+                    intent.putExtras(bundle);
+                    getActivity().startActivity(intent);
+                } else if (mServiceType.equals("simple")) {
+                    Intent intent = new Intent(getActivity(), AnotherUserProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("user_id", mSimpleList.get(mPosition).getUserId());
+                    bundle.putString("user_role", mSimpleList.get(mPosition).getUserDTO().getRole());
+                    intent.putExtras(bundle);
+                    getActivity().startActivity(intent);
+                }
+                break;
+
+            case R.id.text_view_full_profile_user:
+                if (mServiceType.equals("location")) {
+                    Intent intent = new Intent(getActivity(), AnotherUserProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("user_id",mLocationList.get(mPosition).getUserId());
+                    bundle.putString("user_role", mLocationList.get(mPosition).getUserDTO().getRole());
+                    intent.putExtras(bundle);
+                    getActivity().startActivity(intent);
+                } else if (mServiceType.equals("all_type")) {
+                    Intent intent = new Intent(getActivity(), AnotherUserProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("user_id",mAllTypeList.get(mPosition).getUserId());
+                    bundle.putString("user_role",mAllTypeList.get(mPosition).getUserDTO().getRole());
+                    intent.putExtras(bundle);
+                    getActivity().startActivity(intent);
+                } else if (mServiceType.equals("simple")) {
+                    Intent intent = new Intent(getActivity(), AnotherUserProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("user_id", mSimpleList.get(mPosition).getUserId());
+                    bundle.putString("user_role", mSimpleList.get(mPosition).getUserDTO().getRole());
+                    intent.putExtras(bundle);
+                    getActivity().startActivity(intent);
+                }
+                break;
+        }
+    }
+}

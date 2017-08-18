@@ -1,0 +1,131 @@
+package com.android.shadow.views.auth;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.android.shadow.R;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.model.input.UsernameInput;
+import com.android.shadow.model.output.UsernameResponse;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.utils.Utilities;
+import com.android.shadow.views.core.BaseActivity;
+
+
+import retrofit2.Call;
+import retrofit2.Callback;
+
+public class UsernameActivity extends BaseActivity implements View.OnClickListener,TextWatcher {
+
+    private EditText mUseranmeEditText;
+    private TextView mNextTextView;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_username;
+    }
+
+    @Override
+    protected void initViews() {
+        findViewById(R.id.image_view_back).setOnClickListener(this);
+        mUseranmeEditText = (EditText) findViewById(R.id.edit_text_username);
+        mNextTextView = (TextView) findViewById(R.id.text_view_next_username);
+        mNextTextView.setOnClickListener(this);
+        mUseranmeEditText.addTextChangedListener(this);
+    }
+
+
+
+    @Override
+    public void dispose() {
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.image_view_back) {
+            finish();
+        } else if (view.getId() == R.id.text_view_next_username) {
+            String username = mUseranmeEditText.getText().toString().trim();
+            if (!TextUtils.isEmpty(username)) {
+                if (username.length() < 6) {
+                  showToast(R.string.user_name_error);
+                } else if (username.length() >= 6) {
+                    Utilities.hideKeypad(view);
+                    if (!Utilities.checkInternet(UsernameActivity.this)) {
+                        showToast(R.string.no_internet_msg);
+                    } else {
+                        UsernameInput usernameInput = new UsernameInput();
+                        usernameInput.setUserName(username);
+                        checkResponse(usernameInput);
+                    }
+                }
+            }
+        }
+    }
+
+    private void checkResponse(final UsernameInput usernameInput) {
+        showDialog();
+        Call<UsernameResponse> response = GetRestAdapter.getRestAdapter(false).checkUsername(usernameInput);
+        response.enqueue(new Callback<UsernameResponse>() {
+            @Override
+            public void onResponse(Call<UsernameResponse> call, retrofit2.Response<UsernameResponse> response) {
+                hideDialog();
+                if (response != null && response.body() != null) {
+                    if (response.body().getStatus() != null) {
+                        if (response.body().getStatus().equals("404")) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(PreferenceKeys.PREF_USER_NAME, usernameInput.getUserName());
+                            Intent intent = new Intent(UsernameActivity.this, PasswordActivity.class);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        } else if (response.body().getStatus().equals("226")) {
+                            showToast("Username already registered");
+                        } else {
+                            showToast(response.body().getMessage());
+                        }
+                    }
+                } else {
+                    showToast(R.string.server_error_msg);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<UsernameResponse> call, Throwable t) {
+                hideDialog();
+                showToast(t.getLocalizedMessage());
+            }
+        });
+    }
+
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence text, int i, int i1, int i2) {
+
+        if (text!=null && text.length()>=6){
+            mNextTextView.setTextColor(getResources().getColor(android.R.color.white));
+            mNextTextView.setBackgroundDrawable(getResources().getDrawable(R.drawable.round_filled_purple_border));
+        }else {
+            mNextTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
+            mNextTextView.setBackgroundDrawable(getResources().getDrawable(R.drawable.round_purple_border));
+        }
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
+}

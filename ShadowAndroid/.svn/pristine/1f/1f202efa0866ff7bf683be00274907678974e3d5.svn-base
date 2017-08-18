@@ -1,0 +1,184 @@
+package com.android.shadow.presenter;
+
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.Patterns;
+import android.view.View;
+
+import com.android.shadow.R;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.model.SocialMedia;
+import com.android.shadow.model.input.EditProfileInput;
+import com.android.shadow.model.output.EditProfileResponse;
+import com.android.shadow.utils.Utilities;
+import com.android.shadow.views.profile.editprofile.EditProfileBaseActivity;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.FACEBOOK_URL;
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.GITHUB_URL;
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.GOOGLE_PLUS_URL;
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.INSTAGRAM_URL;
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.LINKEDIN_URL;
+import static com.android.shadow.views.profile.editprofile.EditProfileBaseActivity.TWITTER_URL;
+
+/**
+ * Created by jindaldipanshu on 7/6/2017.
+ */
+
+public class EditCompanyProfilePresenter {
+
+    private EditProfileBaseActivity mEditProfileBaseActivity;
+
+    public EditCompanyProfilePresenter(EditProfileBaseActivity editProfileBaseActivity) {
+        this.mEditProfileBaseActivity = editProfileBaseActivity;
+    }
+
+    public void checkValidations(double latitude, double longitude, ArrayList<EditProfileInput.Interest> interestsList,
+                                 ArrayList<EditProfileInput.Occupations> occupationsList,
+                                 ArrayList<SocialMedia.Media> selectedMediaList, String... params) {
+        String userId = params[0];
+        String companyUrl = params[1];
+        String newCompanyName = params[2];
+        String bio = params[3];
+        String userImage = params[4];
+        String companyLocation = params[5];
+        String previousCompanyName = params[6];
+        String url1 = mEditProfileBaseActivity.mUrl1EditText.getText().toString().trim();
+        String url2 = mEditProfileBaseActivity.mUrl2EditText.getText().toString().trim();
+        String url3 = mEditProfileBaseActivity.mUrl3EditText.getText().toString().trim();
+
+        EditProfileInput editProfileInput = new EditProfileInput();
+        if (TextUtils.isEmpty(newCompanyName)) {
+            mEditProfileBaseActivity.showToast("Please enter company name");
+            return;
+        }
+
+        if (mEditProfileBaseActivity.mUrl1EditText.getVisibility() == View.VISIBLE) {
+            if (TextUtils.isEmpty(url1)) {
+                mEditProfileBaseActivity.showToast("Please enter url");
+                return;
+            } else if (!Patterns.WEB_URL.matcher(url1).matches()) {
+                mEditProfileBaseActivity.showToast("Please enter valid url");
+                return;
+            } else {
+                setProfileUrl(editProfileInput, selectedMediaList.get(0).getId(), url1);
+            }
+        }
+        if (mEditProfileBaseActivity.mUrl2EditText.getVisibility() == View.VISIBLE) {
+            if (TextUtils.isEmpty(url2)) {
+                mEditProfileBaseActivity.showToast("Please enter url");
+                return;
+            } else if (!Patterns.WEB_URL.matcher(url2).matches()) {
+                mEditProfileBaseActivity.showToast("Please enter valid url");
+                return;
+            } else {
+                setProfileUrl(editProfileInput, selectedMediaList.get(1).getId(), url2);
+            }
+        }
+        if (mEditProfileBaseActivity.mUrl3EditText.getVisibility() == View.VISIBLE) {
+            if (TextUtils.isEmpty(url3)) {
+                mEditProfileBaseActivity.showToast("Please enter url");
+                return;
+            } else if (!Patterns.WEB_URL.matcher(url3).matches()) {
+                mEditProfileBaseActivity.showToast("Please enter valid url");
+                return;
+            } else {
+                setProfileUrl(editProfileInput, selectedMediaList.get(2).getId(), url3);
+            }
+        }
+
+
+        if (latitude != 0.0d || longitude != 0.0d) {
+            editProfileInput.setLatitude(latitude + "");
+            editProfileInput.setLongitude(longitude + "");
+            editProfileInput.setLocation(companyLocation);
+        }
+
+        editProfileInput.setAppVersion(mEditProfileBaseActivity.APP_NUMBER);
+        editProfileInput.setAppBuildNumber(mEditProfileBaseActivity.APP_BUILD_NUMBER);
+        editProfileInput.setCompanyUrl(companyUrl);
+
+        if (!previousCompanyName.equals(newCompanyName)) {
+            editProfileInput.setCompanyName(newCompanyName);
+        }
+
+        editProfileInput.setBio(bio);
+        if (!TextUtils.isEmpty(userImage)) {
+            editProfileInput.setProfileImage(userImage);
+        }
+        editProfileInput.setOccupations(occupationsList);
+        editProfileInput.setUserId(userId);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(editProfileInput, EditProfileInput.class);
+        Log.e("EditProfileInput--", json);
+
+        if (!Utilities.checkInternet(mEditProfileBaseActivity)) {
+            mEditProfileBaseActivity.showToast(R.string.no_internet_msg);
+        } else {
+            saveData(editProfileInput);
+        }
+    }
+
+    private void saveData(EditProfileInput editProfileInput) {
+        mEditProfileBaseActivity.showDialog();
+        Call<EditProfileResponse> editProfileResponseCall = GetRestAdapter.getRestAdapter(false).editProfile(editProfileInput);
+        editProfileResponseCall.enqueue(new Callback<EditProfileResponse>() {
+            @Override
+            public void onResponse(Call<EditProfileResponse> call, Response<EditProfileResponse> response) {
+                mEditProfileBaseActivity.hideDialog();
+                if (response != null && response.body() != null) {
+                    if (response.body().getStatus().equals("200")) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(response.body(), EditProfileResponse.class);
+                        Log.e("EditProfileResponse--", json);
+                        mEditProfileBaseActivity.showToast("Profile updated successfully");
+                        mEditProfileBaseActivity.finish();
+                    } else {
+                        mEditProfileBaseActivity.showToast(response.body().getMessage());
+                    }
+                } else {
+                    mEditProfileBaseActivity.showToast(R.string.server_error_msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EditProfileResponse> call, Throwable t) {
+                mEditProfileBaseActivity.hideDialog();
+                mEditProfileBaseActivity.showToast(t.getMessage());
+            }
+        });
+
+    }
+
+
+    private void setProfileUrl(EditProfileInput editProfileInput, String id, String url1) {
+        switch (id) {
+            case TWITTER_URL:
+                editProfileInput.setTwitterUrl(url1);
+                break;
+            case FACEBOOK_URL:
+                editProfileInput.setFacebookUrl(url1);
+                break;
+            case LINKEDIN_URL:
+                editProfileInput.setLinkedInUrl(url1);
+                break;
+            case GOOGLE_PLUS_URL:
+                editProfileInput.setGooglePlusUrl(url1);
+                break;
+            case INSTAGRAM_URL:
+                editProfileInput.setInstagramUrl(url1);
+                break;
+            case GITHUB_URL:
+                editProfileInput.setGitHubUrl(url1);
+                break;
+        }
+    }
+
+}

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.android.shadow.views.auth.LoginActivity">
+
+    <LinearLayout
+        android:id="@+id/ll_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/shadow_purple"
+            android:layout_marginTop="50dp"
+            />
+
+        <EditText
+            android:id="@+id/edt_txt_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_white_border"
+            android:hint="Username"
+            android:inputType="textFilter"
+            android:digits="@string/custom_digits"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:layout_marginTop="40dp"
+            />
+
+        <EditText
+            android:id="@+id/edt_txt_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_white_border"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:maxLength="15"
+            android:padding="10dp"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/text_view_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/round_filled_purple_border"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Log In"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+
+            />
+
+        <TextView
+            android:id="@+id/text_view_need_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/round_purple_border"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Need an account"
+            android:textColor="@color/colorPrimary" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_view_forgot_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
+        android:text="Forgot password?" />
+</RelativeLayout>

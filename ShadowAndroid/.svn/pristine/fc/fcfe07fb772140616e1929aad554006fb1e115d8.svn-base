@@ -1,0 +1,25 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+    <style name="ToolTipLayoutDefaultStyle.Custom1">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmallInverse</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ToolTipLayoutCustomStyle">
+        <item name="ttlm_padding">25dip</item>
+        <item name="ttlm_strokeColor">#ffffff</item>
+        <item name="ttlm_backgroundColor">@color/colorPrimaryDark</item>
+        <item name="ttlm_strokeWeight">2dip</item>
+        <item name="ttlm_cornerRadius">8dip</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceInverse</item>
+    </style>
+
+</resources>

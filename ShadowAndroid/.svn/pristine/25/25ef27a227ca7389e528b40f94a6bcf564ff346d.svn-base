@@ -1,0 +1,204 @@
+package com.android.shadow.adapter.search;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.android.shadow.R;
+import com.android.shadow.model.output.SearchSimpleResponse;
+import com.android.shadow.views.core.BaseActivity;
+import com.android.shadow.views.core.BaseFragment;
+import com.android.shadow.views.profile.AnotherUserProfileActivity;
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+/**
+ * Created by singhgharjyot on 7/7/2017.
+ */
+
+public class SearchSimpleListAdapter extends RecyclerView.Adapter<SearchSimpleListAdapter.ViewHolder> {
+
+
+    private ArrayList<SearchSimpleResponse.Data> mList;
+    private BaseActivity mActivity;
+    private BaseFragment mBaseFragment;
+
+    public SearchSimpleListAdapter(BaseActivity context, ArrayList<?> mList) {
+        this.mList = (ArrayList<SearchSimpleResponse.Data>) mList;
+        this.mActivity = context;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View itemLayoutView = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.row_search, null);
+        // create ViewHolder
+        ViewHolder viewHolder = new ViewHolder(itemLayoutView);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(SearchSimpleListAdapter.ViewHolder viewHolder, int position) {
+        viewHolder.mDistanceTextView.setVisibility(View.GONE);
+        viewHolder.mNameTextView.setText(mList.get(position).getName());
+        viewHolder.mNoOfRatingTextView.setText(mList.get(position).getUserDTO().getRatingCount());
+        viewHolder.mDistanceTextView.setText(mList.get(position).getDistance());
+        Glide.with(mActivity).
+                load(mList.get(position).getUserDTO().getProfileImageUrl()).
+                error(mActivity.getResources().getDrawable(R.drawable.profile_gray)).
+                into(viewHolder.mProfileImageView);
+
+
+        String rating = mList.get(position).getAvgRating();
+        double rate = 0;
+        if (!TextUtils.isEmpty(rating)) {
+            rate = Double.parseDouble(rating);
+        }
+        //setRating(viewHolder, (int) rate);
+        viewHolder.mAverageRatingTextView.setText(rate + "");
+        if (mList.get(position).getUserDTO().getRole() != null && !mList.get(position).getUserDTO().getRole().equals("")) {
+            if (mList.get(position).getUserDTO().getRole().contains("USER")) {
+                if (!TextUtils.isEmpty(mList.get(position).getUserDTO().getCompanyName())) {
+                    viewHolder.mTypeImageView.setImageResource(R.drawable.company_icon);
+                    viewHolder.mTypeNameTextView.setText(mList.get(position).getUserDTO().getCompanyName());
+                } else if (!TextUtils.isEmpty(mList.get(position).getUserDTO().getSchoolName())) {
+                    viewHolder.mTypeImageView.setImageResource(R.drawable.school);
+                    viewHolder.mTypeNameTextView.setText(mList.get(position).getUserDTO().getSchoolName());
+                } else {
+                    viewHolder.mTypeImageView.setVisibility(View.GONE);
+                    viewHolder.mTypeNameTextView.setVisibility(View.GONE);
+                }
+            } else if (mList.get(position).getUserDTO().getRole().contains("COMPANY")) {
+                if (!TextUtils.isEmpty(mList.get(position).getUserDTO().getLocation())) {
+                    viewHolder.mTypeImageView.setImageResource(R.drawable.ic_location);
+                    viewHolder.mTypeNameTextView.setText(mList.get(position).getUserDTO().getLocation());
+                } else {
+                    viewHolder.mTypeImageView.setVisibility(View.GONE);
+                    viewHolder.mTypeNameTextView.setVisibility(View.GONE);
+                }
+            } else if (mList.get(position).getUserDTO().getRole().contains("SCHOOL")) {
+                if (!TextUtils.isEmpty(mList.get(position).getUserDTO().getLocation())) {
+                    viewHolder.mTypeImageView.setImageResource(R.drawable.ic_location);
+                    viewHolder.mTypeNameTextView.setText(mList.get(position).getUserDTO().getLocation());
+                } else {
+                    viewHolder.mTypeImageView.setVisibility(View.GONE);
+                    viewHolder.mTypeNameTextView.setVisibility(View.GONE);
+                }
+            }
+        } else {
+
+        }
+    }
+
+
+   /* private void setRating(SearchSimpleListAdapter.ViewHolder viewHolder, int rate) {
+
+        switch (rate) {
+            case 0:
+                viewHolder.mStar1.setImageResource(R.drawable.ic_star_grey);
+                viewHolder.mStar2.setImageResource(R.drawable.ic_star_grey);
+                viewHolder.mStar3.setImageResource(R.drawable.ic_star_grey);
+                viewHolder.mStar4.setImageResource(R.drawable.ic_star_grey);
+                viewHolder.mStar5.setImageResource(R.drawable.ic_star_grey);
+                break;
+            case 1:
+                viewHolder.mStar1.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar2.setImageResource(R.drawable.ic_star_grey);
+                viewHolder.mStar3.setImageResource(R.drawable.ic_star_grey);
+                viewHolder.mStar4.setImageResource(R.drawable.ic_star_grey);
+                viewHolder.mStar5.setImageResource(R.drawable.ic_star_grey);
+                break;
+            case 2:
+                viewHolder.mStar1.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar2.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar3.setImageResource(R.drawable.ic_star_grey);
+                viewHolder.mStar4.setImageResource(R.drawable.ic_star_grey);
+                viewHolder.mStar5.setImageResource(R.drawable.ic_star_grey);
+                break;
+            case 3:
+                viewHolder.mStar1.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar2.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar3.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar4.setImageResource(R.drawable.ic_star_grey);
+                viewHolder.mStar5.setImageResource(R.drawable.ic_star_grey);
+                break;
+            case 4:
+                viewHolder.mStar1.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar2.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar3.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar4.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar5.setImageResource(R.drawable.ic_star_grey);
+                break;
+            case 5:
+                viewHolder.mStar1.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar2.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar3.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar4.setImageResource(R.drawable.ic_star_yellow);
+                viewHolder.mStar5.setImageResource(R.drawable.ic_star_yellow);
+                break;
+
+
+        }
+
+    }*/
+
+    @Override
+    public int getItemCount() {
+        return mList == null ? 0 : mList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private final TextView mAverageRatingTextView;
+        private final TextView mTypeNameTextView, mNoOfRatingTextView;
+        private final ImageView mTypeImageView;
+        /* private final LinearLayout mRatingLl;
+                private final ImageView mStar1, mStar2, mStar3, mStar4, mStar5;*/
+        private TextView mDistanceTextView;
+        private TextView mNameTextView;
+        private CircleImageView mProfileImageView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mNameTextView = (TextView) itemView.findViewById(R.id.text_view_name);
+            mDistanceTextView = (TextView) itemView.findViewById(R.id.text_view_distance);
+            mProfileImageView = (CircleImageView) itemView.findViewById(R.id.Circular_image_view_Profile_pic);
+            mAverageRatingTextView = (TextView) itemView.findViewById(R.id.text_view_average_rating);
+            mTypeNameTextView = (TextView) itemView.findViewById(R.id.text_view_type_name);
+            mTypeImageView = (ImageView) itemView.findViewById(R.id.iv_icon_type);
+            mNoOfRatingTextView = (TextView) itemView.findViewById(R.id.tv_no_of_rating);
+         /*   mRatingLl = (LinearLayout) itemView.findViewById(R.id.ll_rating);
+            mStar1 = (ImageView) itemView.findViewById(R.id.iv_star1);
+            mStar2 = (ImageView) itemView.findViewById(R.id.iv_star2);
+            mStar3 = (ImageView) itemView.findViewById(R.id.iv_star3);
+            mStar4 = (ImageView) itemView.findViewById(R.id.iv_star4);
+            mStar5 = (ImageView) itemView.findViewById(R.id.iv_star5);*/
+            itemView.findViewById(R.id.rl_search).setOnClickListener(this);
+        }
+
+
+        @Override
+        public void onClick(View view) {
+            int position = getLayoutPosition();
+            switch (view.getId()) {
+                case R.id.rl_search:
+                    Intent intent = new Intent(mActivity, AnotherUserProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("user_id", mList.get(position).getUserId());
+                    bundle.putString("user_role", mList.get(position).getUserDTO().getRole());
+                    intent.putExtras(bundle);
+                    mActivity.startActivity(intent);
+                    break;
+            }
+        }
+    }
+}

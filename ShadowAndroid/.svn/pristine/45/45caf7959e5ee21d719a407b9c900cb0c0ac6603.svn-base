@@ -1,0 +1,146 @@
+package com.android.shadow.presenter;
+
+import android.content.Intent;
+import android.text.TextUtils;
+
+import com.android.shadow.R;
+import com.android.shadow.ShadowApp;
+import com.android.shadow.addressvalidator.logger.Log;
+import com.android.shadow.api.GetRestAdapter;
+import com.android.shadow.dialog.EmailNumberSelectionDialog;
+import com.android.shadow.model.input.LoginInput;
+import com.android.shadow.model.output.LoginResponse;
+import com.android.shadow.utils.BundleKeys;
+import com.android.shadow.utils.PreferenceKeys;
+import com.android.shadow.utils.SharedPrefsHelper;
+import com.android.shadow.utils.Utilities;
+import com.android.shadow.views.auth.EmailVerificationActivity;
+import com.android.shadow.views.auth.LoginActivity;
+import com.android.shadow.views.auth.PhoneVerificationActivity;
+import com.android.shadow.views.core.BaseActivity;
+import com.android.shadow.views.dashboard.DashboardActivity;
+
+import org.w3c.dom.Text;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+
+/**
+ * This class is used to check login validations and call the login api
+ *
+ * @author jindaldipanshu
+ * @version 1.0
+ */
+
+public class LoginPresenter implements EmailNumberSelectionDialog.EmailSelectionCallback {
+
+    private final LoginCallback mLoginCallback;
+    private final BaseActivity mLoginActivity;
+
+    public interface LoginCallback {
+        void onLoginSuccess(retrofit2.Response<LoginResponse> loginResponse);
+    }
+
+    public LoginPresenter(BaseActivity loginActivity, LoginCallback loginCallback) {
+        this.mLoginCallback = loginCallback;
+        this.mLoginActivity = loginActivity;
+    }
+
+
+    public void checkValidations(String... params) {
+        String name = params[0];
+        String pass = params[1];
+        if (!TextUtils.isEmpty(name.trim()) && name.trim().length() >= 6
+                && !TextUtils.isEmpty(pass.trim()) && pass.trim().length() >= 6) {
+            if (!Utilities.checkInternet(mLoginActivity)) {
+                mLoginActivity.showToast(R.string.no_internet_msg);
+            } else {
+                LoginInput loginInput = new LoginInput();
+                loginInput.setPassword(pass.trim());
+                loginInput.setUserName(name.trim());
+                loginInput.setAppBuildNumber(mLoginActivity.APP_BUILD_NUMBER);
+                loginInput.setAppVersion(mLoginActivity.APP_NUMBER);
+                responseCheck(loginInput);
+            }
+        } else {
+            if (!TextUtils.isEmpty(name) && name.length() < 6) {
+                mLoginActivity.showToast(R.string.user_name_error);
+            } else if (!TextUtils.isEmpty(pass) && pass.length() < 6) {
+                mLoginActivity.showToast(R.string.invalid_pass_error);
+            }
+        }
+    }
+
+    private void responseCheck(LoginInput loginInput) {
+        mLoginActivity.showDialog();
+        final Call<LoginResponse> response = GetRestAdapter.getRestAdapter(false).loghinUser(loginInput);
+        response.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, retrofit2.Response<LoginResponse> loginResponse) {
+                mLoginActivity.hideDialog();
+                if (loginResponse != null && loginResponse.body() != null) {
+                    if (loginResponse.body().getStatus().equals("200")) {
+                        if (loginResponse.body().getData() != null) {
+                            SharedPrefsHelper sharedPrefsHelper = new SharedPrefsHelper(mLoginActivity);
+                            sharedPrefsHelper.save(PreferenceKeys.PREF_USER_ID, loginResponse.body().getData().getUserId());
+                            sharedPrefsHelper.save(PreferenceKeys.PREF_SESSION_TOKEN, loginResponse.body().getData().getSessionToken());
+                            sharedPrefsHelper.save(PreferenceKeys.PREF_REGIS,loginResponse.body().getData().getRole());
+                            ShadowApp.sessionToken = loginResponse.body().getData().getSessionToken();
+                            Log.e("user id--------",loginResponse.body().getData().getUserId());
+                            Log.e("--------------------sessiontoken ---------------------------",loginResponse.body().getData().getSessionToken());
+                            String number = loginResponse.body().getData().getMobileNumber();
+                            String email = loginResponse.body().getData().getEmail();
+                            if (TextUtils.isEmpty(number)) {
+                                Intent profileIntent = new Intent(mLoginActivity, PhoneVerificationActivity.class);
+                                profileIntent.putExtra("confirmation",true);
+                                mLoginActivity.startActivity(profileIntent);
+                                mLoginActivity.finish();
+
+                            } else if (TextUtils.isEmpty(email)) {
+                                Intent profileIntent = new Intent(mLoginActivity, EmailVerificationActivity.class);
+                                profileIntent.putExtra("confirmation",true);
+                                mLoginActivity.startActivity(profileIntent);
+                                mLoginActivity.finish();
+
+                            } else {
+                                Intent profileIntent = new Intent(mLoginActivity, DashboardActivity.class);
+                                mLoginActivity.startActivity(profileIntent);
+                                mLoginActivity.finish();
+                            }
+                        }
+                    } else if (loginResponse.body().getStatus().equals("210")) {
+                        EmailNumberSelectionDialog emailNumberSelectionDialog = new EmailNumberSelectionDialog(mLoginActivity, LoginPresenter.this);
+                        emailNumberSelectionDialog.showEmailNumberDialog(R.string.dialog_verify_otp_title_name);
+                    } else {
+                        if (loginResponse.body().getMessage() != null) {
+                            mLoginActivity.showToast(loginResponse.body().getMessage());
+                        } else mLoginActivity.showToast(R.string.server_error_msg);
+                    }
+                } else {
+                    mLoginActivity.showToast(R.string.server_error_msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                mLoginActivity.hideDialog();
+                mLoginActivity.showToast(t.getLocalizedMessage());
+            }
+        });
+    }
+
+    @Override
+    public void getSelection(boolean isEmailSelected) {
+        Intent intent;
+        if (isEmailSelected) {
+            intent = new Intent(mLoginActivity, EmailVerificationActivity.class);
+            //intent.putExtra(BundleKeys.BUNDLE_AUTH,"no");
+            mLoginActivity.startActivity(intent);
+        } else {
+            intent = new Intent(mLoginActivity, PhoneVerificationActivity.class);
+            //  intent.putExtra(BundleKeys.BUNDLE_AUTH,"no");
+            mLoginActivity.startActivity(intent);
+        }
+    }
+
+}
